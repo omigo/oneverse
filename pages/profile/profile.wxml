@@ -1,0 +1,78 @@
+<view class="container">
+  <!-- 用户信息 -->
+  <view class="user-info">
+    <view class="avatar-wrapper">
+      <image class="avatar" src="{{userInfo.avatarUrl || '/assets/icons/default-avatar.png'}}"></image>
+      <button class="avatar-btn" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar" wx:if="{{!userInfo.avatarUrl}}">
+        设置头像
+      </button>
+    </view>
+    <view class="nickname">{{userInfo.nickName || '未登录'}}</view>
+    <button class="login-btn" open-type="getUserInfo" bindgetuserinfo="onGetUserInfo" wx:if="{{!userInfo.nickName}}">
+      点击登录
+    </button>
+  </view>
+
+  <!-- 数据统计 -->
+  <view class="stats">
+    <view class="stat-item" bindtap="navigateToList" data-type="likes">
+      <text class="count">{{stats.likes}}</text>
+      <text class="label">点赞</text>
+    </view>
+    <view class="stat-item" bindtap="navigateToList" data-type="collections">
+      <text class="count">{{stats.collections}}</text>
+      <text class="label">收藏</text>
+    </view>
+    <view class="stat-item" bindtap="navigateToList" data-type="comments">
+      <text class="count">{{stats.comments}}</text>
+      <text class="label">评论</text>
+    </view>
+  </view>
+
+  <!-- 关注列表 -->
+  <view class="follows">
+    <view class="section-title">我的关注</view>
+    <view class="follow-tabs">
+      <view class="tab {{currentTab === 'authors' ? 'active' : ''}}" 
+            bindtap="switchTab" 
+            data-tab="authors">
+        作者 ({{follows.authors.length}})
+      </view>
+      <view class="tab {{currentTab === 'tags' ? 'active' : ''}}" 
+            bindtap="switchTab" 
+            data-tab="tags">
+        标签 ({{follows.tags.length}})
+      </view>
+    </view>
+
+    <!-- 关注的作者列表 -->
+    <scroll-view class="follow-list" scroll-y="true" wx:if="{{currentTab === 'authors'}}">
+      <view class="follow-item" 
+            wx:for="{{follows.authors}}" 
+            wx:key="id"
+            bindtap="navigateToAuthor"
+            data-author="{{item}}">
+        <text class="name">{{item.name}}</text>
+        <text class="quote-count">{{item.quoteCount}}条偈语</text>
+      </view>
+      <view class="empty" wx:if="{{!follows.authors.length}}">
+        <text>暂无关注的作者</text>
+      </view>
+    </scroll-view>
+
+    <!-- 关注的标签列表 -->
+    <scroll-view class="follow-list" scroll-y="true" wx:if="{{currentTab === 'tags'}}">
+      <view class="follow-item" 
+            wx:for="{{follows.tags}}" 
+            wx:key="id"
+            bindtap="navigateToTag"
+            data-tag="{{item}}">
+        <text class="name">#{{item.name}}</text>
+        <text class="quote-count">{{item.quoteCount}}条偈语</text>
+      </view>
+      <view class="empty" wx:if="{{!follows.tags.length}}">
+        <text>暂无关注的标签</text>
+      </view>
+    </scroll-view>
+  </view>
+</view> 

@@ -1,0 +1,161 @@
+.container {
+  min-height: 100vh;
+  background: #f8f8f8;
+  padding-bottom: 40rpx;
+}
+
+/* 用户信息 */
+.user-info {
+  background: #fff;
+  padding: 40rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.avatar-wrapper {
+  position: relative;
+  width: 160rpx;
+  height: 160rpx;
+  margin-bottom: 20rpx;
+}
+
+.avatar {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 50%;
+}
+
+.avatar-btn {
+  position: absolute;
+  bottom: -20rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 24rpx;
+  padding: 8rpx 20rpx;
+  background: #333;
+  color: #fff;
+  border-radius: 30rpx;
+  white-space: nowrap;
+}
+
+.nickname {
+  font-size: 32rpx;
+  color: #333;
+  margin: 20rpx 0;
+}
+
+.login-btn {
+  margin-top: 20rpx;
+  font-size: 28rpx;
+  padding: 16rpx 40rpx;
+  background: #333;
+  color: #fff;
+  border-radius: 40rpx;
+}
+
+/* 数据统计 */
+.stats {
+  display: flex;
+  justify-content: space-around;
+  padding: 40rpx;
+  background: #fff;
+  margin-top: 20rpx;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.count {
+  font-size: 36rpx;
+  color: #333;
+  font-weight: 500;
+}
+
+.label {
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 10rpx;
+}
+
+/* 关注列表 */
+.follows {
+  margin-top: 20rpx;
+  background: #fff;
+  padding: 40rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  color: #333;
+  font-weight: 500;
+  margin-bottom: 30rpx;
+}
+
+.follow-tabs {
+  display: flex;
+  border-bottom: 2rpx solid #f5f5f5;
+  margin-bottom: 30rpx;
+}
+
+.tab {
+  flex: 1;
+  text-align: center;
+  font-size: 28rpx;
+  color: #666;
+  padding: 20rpx 0;
+  position: relative;
+}
+
+.tab.active {
+  color: #333;
+  font-weight: 500;
+}
+
+.tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40rpx;
+  height: 4rpx;
+  background: #333;
+  border-radius: 2rpx;
+}
+
+.follow-list {
+  max-height: 600rpx;
+}
+
+.follow-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30rpx 0;
+  border-bottom: 2rpx solid #f5f5f5;
+}
+
+.follow-item:last-child {
+  border-bottom: none;
+}
+
+.name {
+  font-size: 28rpx;
+  color: #333;
+}
+
+.quote-count {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.empty {
+  text-align: center;
+  padding: 100rpx 0;
+  color: #999;
+  font-size: 28rpx;
+} 

@@ -1,0 +1,49 @@
+<view class="container">
+  <!-- 出处信息 -->
+  <view class="source-info">
+    <view class="header">
+      <text class="name">{{source.name}}</text>
+      <view class="follow-btn {{source.isFollowed ? 'active' : ''}}" bindtap="handleFollow">
+        {{source.isFollowed ? '已关注' : '关注'}}
+      </view>
+    </view>
+    <view class="stats">
+      <view class="stat-item">
+        <text class="count">{{source.quoteCount}}</text>
+        <text class="label">偈语</text>
+      </view>
+      <view class="stat-item">
+        <text class="count">{{source.followerCount}}</text>
+        <text class="label">关注者</text>
+      </view>
+    </view>
+    <text class="description" wx:if="{{source.description}}">{{source.description}}</text>
+  </view>
+
+  <!-- 出处的偈语列表 -->
+  <view class="quotes-section">
+    <view class="section-title">全部偈语</view>
+    <view class="quotes-list">
+      <view class="quote-item" 
+            wx:for="{{quotes}}" 
+            wx:key="id"
+            bindtap="navigateToQuote"
+            data-quote="{{item}}">
+        <text class="quote-text">{{item.quote}}</text>
+        <view class="meta">
+          <text class="author">{{item.author}}</text>
+          <view class="stats">
+            <view class="stat">
+              <image class="icon" src="/assets/icons/{{item.isLiked ? 'like-active' : 'like'}}.png"></image>
+              <text>{{item.likes || 0}}</text>
+            </view>
+            <view class="stat">
+              <image class="icon" src="/assets/icons/comment.png"></image>
+              <text>{{item.comments || 0}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view> 

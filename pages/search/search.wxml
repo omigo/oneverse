@@ -1,0 +1,99 @@
+<view class="container">
+  <view class="search-header">
+    <view class="search-bar">
+      <image class="search-icon" src="/assets/icons/search.png"></image>
+      <input class="search-input" 
+             placeholder="搜索偈语、作者、出处、标签" 
+             value="{{searchText}}"
+             bindinput="onSearchInput"
+             bindconfirm="onSearch"/>
+      <view class="search-btn" bindtap="onSearch" wx:if="{{searchText}}">搜索</view>
+    </view>
+  </view>
+
+  <view class="tabs">
+    <view class="tab-item {{currentTab === 'quotes' ? 'active' : ''}}" 
+          bindtap="switchTab" 
+          data-tab="quotes">
+      <text>偈语</text>
+      <text class="count" wx:if="{{results.quotes.length}}">{{results.quotes.length}}</text>
+    </view>
+    <view class="tab-item {{currentTab === 'authors' ? 'active' : ''}}" 
+          bindtap="switchTab" 
+          data-tab="authors">
+      <text>作者</text>
+      <text class="count" wx:if="{{results.authors.length}}">{{results.authors.length}}</text>
+    </view>
+    <view class="tab-item {{currentTab === 'sources' ? 'active' : ''}}" 
+          bindtap="switchTab" 
+          data-tab="sources">
+      <text>出处</text>
+      <text class="count" wx:if="{{results.sources.length}}">{{results.sources.length}}</text>
+    </view>
+    <view class="tab-item {{currentTab === 'tags' ? 'active' : ''}}" 
+          bindtap="switchTab" 
+          data-tab="tags">
+      <text>标签</text>
+      <text class="count" wx:if="{{results.tags.length}}">{{results.tags.length}}</text>
+    </view>
+  </view>
+
+  <scroll-view class="results" scroll-y="true">
+    <!-- 偈语搜索结果 -->
+    <view class="quotes-list" wx:if="{{currentTab === 'quotes'}}">
+      <view class="quote-item" 
+            wx:for="{{results.quotes}}" 
+            wx:key="index"
+            bindtap="navigateToQuote"
+            data-quote="{{item}}">
+        <text class="quote-text">{{item.quote}}</text>
+        <view class="quote-meta">
+          <text class="author">{{item.author}}</text>
+          <text class="source" wx:if="{{item.source}}">{{item.source}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 作者搜索结果 -->
+    <view class="authors-list" wx:if="{{currentTab === 'authors'}}">
+      <view class="author-item" 
+            wx:for="{{results.authors}}" 
+            wx:key="index"
+            bindtap="navigateToAuthor"
+            data-author="{{item}}">
+        <text class="name">{{item.name}}</text>
+        <text class="quote-count">{{item.quoteCount}}条偈语</text>
+      </view>
+    </view>
+
+    <!-- 出处搜索结果 -->
+    <view class="sources-list" wx:if="{{currentTab === 'sources'}}">
+      <view class="source-item" 
+            wx:for="{{results.sources}}" 
+            wx:key="index"
+            bindtap="navigateToSource"
+            data-source="{{item}}">
+        <text class="name">{{item.name}}</text>
+        <text class="quote-count">{{item.quoteCount}}条偈语</text>
+      </view>
+    </view>
+
+    <!-- 标签搜索结果 -->
+    <view class="tags-list" wx:if="{{currentTab === 'tags'}}">
+      <view class="tag-item" 
+            wx:for="{{results.tags}}" 
+            wx:key="index"
+            bindtap="navigateToTag"
+            data-tag="{{item}}">
+        <text class="name">#{{item.name}}</text>
+        <text class="quote-count">{{item.quoteCount}}条偈语</text>
+      </view>
+    </view>
+
+    <!-- 无搜索结果 -->
+    <view class="no-result" wx:if="{{searched && !hasResults}}">
+      <image class="no-result-icon" src="/assets/icons/no-result.png"></image>
+      <text>暂无搜索结果</text>
+    </view>
+  </scroll-view>
+</view> 

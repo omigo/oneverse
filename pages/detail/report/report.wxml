@@ -1,0 +1,43 @@
+<view class="container">
+  <!-- 偈语预览 -->
+  <view class="quote-preview">
+    <text class="quote-text">{{quote.quote}}</text>
+    <text class="author">{{quote.author}}</text>
+  </view>
+
+  <!-- 举报表单 -->
+  <view class="report-form">
+    <view class="section-title">举报原因</view>
+    <view class="reasons-list">
+      <view class="reason-item" 
+            wx:for="{{reasons}}" 
+            wx:key="*this"
+            bindtap="handleReasonSelect"
+            data-reason="{{item}}">
+        <radio checked="{{selectedReason === item}}" />
+        <text>{{item}}</text>
+      </view>
+    </view>
+
+    <view class="description-section">
+      <view class="section-title">补充说明</view>
+      <textarea class="description-input"
+                placeholder="请详细描述问题（选填）"
+                value="{{description}}"
+                bindinput="handleDescriptionInput"
+                maxlength="{{maxDescriptionLength}}"
+                placeholder-class="placeholder" />
+      <view class="word-count">{{description.length}}/{{maxDescriptionLength}}</view>
+    </view>
+
+    <view class="submit-btn {{selectedReason ? 'active' : ''}}" bindtap="handleSubmit">
+      提交
+    </view>
+  </view>
+
+  <!-- 提示文本 -->
+  <view class="tips">
+    <text>感谢您帮助我们维护平台环境</text>
+    <text>我们会认真核实并处理您的举报</text>
+  </view>
+</view> 

@@ -1,0 +1,35 @@
+/**app.wxss**/
+page {
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica,
+    Segoe UI, Arial, Roboto, "PingFang SC", "miui", "Hiragino Sans GB",
+    "Microsoft Yahei", sans-serif;
+  background: linear-gradient(135deg, #f6f8fc 0%, #f1f4f9 100%);
+}
+
+.container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20rpx;
+  box-sizing: border-box;
+}
+
+/* 主题色变量 */
+page {
+  --primary-color: #4a90e2;
+  --primary-light: #6ba7e5;
+  --primary-dark: #357abd;
+  --accent-color: #ff6b6b;
+  --accent-light: #ff8585;
+  --accent-dark: #e65252;
+  --text-primary: #2c3e50;
+  --text-secondary: #34495e;
+  --text-light: #7f8c8d;
+  --background-light: #f8f9fa;
+  --background-dark: #f1f3f5;
+  --border-color: rgba(0, 0, 0, 0.1);
+  --shadow-color: rgba(0, 0, 0, 0.1);
+}

@@ -1,0 +1,60 @@
+<swiper class="container" vertical="true" bindchange="onSwiperChange">
+  <swiper-item wx:for="{{quotes}}" wx:key="index">
+    <view class="quote-container" wx:if="{{!isLoading}}">
+      <view class="quote-content">
+        <text class="quote-text">{{item.quote}}</text>
+        <view class="meta-info">
+          <view class="meta-row">
+            <view class="source" bindtap="navigateToSource" data-source="{{item.source}}" wx:if="{{item.source}}">
+              <text class="value">《{{item.source}}》</text>
+            </view>
+            <view class="author" bindtap="navigateToAuthor" data-author="{{item.author}}">
+              <text class="value">{{item.author}}</text>
+            </view>
+          </view>
+        </view>
+        
+        <view class="tags" wx:if="{{item.tags && item.tags.length > 0}}">
+          <view class="tag-list">
+            <view class="tag" wx:for="{{item.tags}}" wx:key="*this" wx:for-item="tag" 
+                  bindtap="navigateToTag" data-tag="{{tag}}">
+              <text>#{{tag}}</text>
+            </view>
+          </view>
+        </view>
+
+        <view class="explanation" wx:if="{{item.explanation}}">
+          <text class="value">{{item.explanation}}</text>
+        </view>
+      </view>
+
+      <view class="actions">
+        <view class="action-item {{item.isLiked ? 'active' : ''}}" bindtap="handleLike" data-index="{{index}}">
+          <image class="icon" src="/assets/icons/{{item.isLiked ? 'like-active' : 'like'}}.png"></image>
+          <text>{{item.likes || 0}}</text>
+        </view>
+        <view class="action-item" bindtap="handleComment" data-index="{{index}}">
+          <image class="icon" src="/assets/icons/comment.png"></image>
+          <text>{{item.comments || 0}}</text>
+        </view>
+        <view class="action-item {{item.isCollected ? 'active' : ''}}" bindtap="handleCollect" data-index="{{index}}">
+          <image class="icon" src="/assets/icons/{{item.isCollected ? 'collect-active' : 'collect'}}.png"></image>
+          <text>收藏</text>
+        </view>
+        <button class="share-btn" open-type="share" data-index="{{index}}">
+          <image class="icon" src="/assets/icons/share.png"></image>
+          <text>分享</text>
+        </button>
+      </view>
+    </view>
+    <view class="loading" wx:else>
+      <text>正在加载偈语...</text>
+    </view>
+  </swiper-item>
+</swiper>
+
+<view class="controls">
+  <view class="data-source" bindtap="toggleDataSource" wx:if="{{useAPI}}">
+    <text>API数据</text>
+  </view>
+</view> 

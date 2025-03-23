@@ -1,0 +1,62 @@
+<view class="container">
+  <form bindsubmit="handleSubmit">
+    <view class="form-group">
+      <view class="label">偈语内容</view>
+      <textarea class="input textarea" 
+                name="quote" 
+                placeholder="请输入偈语内容" 
+                value="{{formData.quote}}"
+                maxlength="200"
+                bindinput="handleQuoteInput"/>
+      <view class="word-count">{{quoteLength}}/200</view>
+    </view>
+
+    <view class="form-group">
+      <view class="label">作者</view>
+      <input class="input" 
+             name="author" 
+             placeholder="请输入作者" 
+             value="{{formData.author}}"/>
+    </view>
+
+    <view class="form-group">
+      <view class="label">出处</view>
+      <input class="input" 
+             name="source" 
+             placeholder="请输入出处" 
+             value="{{formData.source}}"/>
+    </view>
+
+    <view class="form-group">
+      <view class="label">标签</view>
+      <view class="tags-input">
+        <view class="tag-item" wx:for="{{formData.tags}}" wx:key="index">
+          <text>{{item}}</text>
+          <text class="delete-tag" bindtap="deleteTag" data-index="{{index}}">×</text>
+        </view>
+        <input class="tag-input" 
+               placeholder="{{formData.tags.length ? '' : '请输入标签，回车确认'}}"
+               value="{{tagInput}}"
+               bindconfirm="addTag"
+               bindinput="handleTagInput"/>
+      </view>
+    </view>
+
+    <view class="form-group">
+      <view class="label">解释</view>
+      <textarea class="input textarea" 
+                name="explanation" 
+                placeholder="请输入解释内容" 
+                value="{{formData.explanation}}"
+                maxlength="500"
+                bindinput="handleExplanationInput"/>
+      <view class="word-count">{{explanationLength}}/500</view>
+    </view>
+
+    <button class="submit-btn" 
+            form-type="submit" 
+            disabled="{{!formData.quote || !formData.author}}">
+      发布
+    </button>
+  </form>
+</view> 

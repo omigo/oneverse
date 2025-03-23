@@ -1,0 +1,99 @@
+<view class="container">
+  <!-- 偈语内容区域 -->
+  <view class="quote-section">
+    <view class="quote-content">
+      <text class="quote-text">{{quote.quote}}</text>
+      <view class="meta-info">
+        <view class="author" bindtap="navigateToAuthor" data-author="{{quote.author}}">
+          <text class="label">作者：</text>
+          <text class="value">{{quote.author}}</text>
+        </view>
+        <view class="source" bindtap="navigateToSource" data-source="{{quote.source}}" wx:if="{{quote.source}}">
+          <text class="label">出处：</text>
+          <text class="value">{{quote.source}}</text>
+        </view>
+      </view>
+      <view class="tags" wx:if="{{quote.tags && quote.tags.length > 0}}">
+        <text class="label">标签：</text>
+        <view class="tag-list">
+          <text class="tag" 
+                wx:for="{{quote.tags}}" 
+                wx:key="*this" 
+                bindtap="navigateToTag" 
+                data-tag="{{item}}">#{{item}}</text>
+        </view>
+      </view>
+      <view class="explanation" wx:if="{{quote.explanation}}">
+        <text class="label">解释：</text>
+        <text class="value">{{quote.explanation}}</text>
+      </view>
+    </view>
+    <view class="actions">
+      <view class="action-item" bindtap="handleLike">
+        <image class="icon" src="/assets/icons/{{quote.isLiked ? 'like-active' : 'like'}}.png"></image>
+        <text>{{quote.likes || 0}}</text>
+      </view>
+      <view class="action-item" bindtap="handleCollect">
+        <image class="icon" src="/assets/icons/{{quote.isCollected ? 'collect-active' : 'collect'}}.png"></image>
+        <text>{{quote.collections || 0}}</text>
+      </view>
+      <button class="share-btn" open-type="share">
+        <image class="icon" src="/assets/icons/share.png"></image>
+      </button>
+      <view class="action-item" bindtap="handleReport">
+        <image class="icon" src="/assets/icons/report.png"></image>
+      </view>
+    </view>
+  </view>
+
+  <!-- 评论区域 -->
+  <view class="comments-section">
+    <view class="section-title">
+      <text>评论 {{comments.length}}</text>
+    </view>
+    
+    <!-- 评论列表 -->
+    <scroll-view class="comments-list" scroll-y="true">
+      <view class="comment-item" wx:for="{{comments}}" wx:key="id">
+        <image class="avatar" src="{{item.avatar}}"></image>
+        <view class="comment-content">
+          <view class="comment-header">
+            <text class="username">{{item.username}}</text>
+            <text class="time">{{item.time}}</text>
+          </view>
+          <text class="comment-text">{{item.content}}</text>
+          <view class="comment-actions">
+            <view class="action" bindtap="likeComment" data-id="{{item.id}}">
+              <image class="icon-small" src="/assets/icons/{{item.isLiked ? 'like-active' : 'like'}}.png"></image>
+              <text>{{item.likes || 0}}</text>
+            </view>
+            <view class="action" bindtap="replyComment" data-id="{{item.id}}">
+              <image class="icon-small" src="/assets/icons/reply.png"></image>
+              <text>回复</text>
+            </view>
+          </view>
+          <!-- 回复列表 -->
+          <view class="replies" wx:if="{{item.replies && item.replies.length > 0}}">
+            <view class="reply-item" wx:for="{{item.replies}}" wx:key="id" wx:for-item="reply">
+              <text class="username">{{reply.username}}</text>
+              <text class="reply-text">{{reply.content}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="no-comment" wx:if="{{!comments.length}}">
+        <text>暂无评论，快来抢沙发吧~</text>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 评论输入框 -->
+  <view class="comment-input">
+    <input class="input" 
+           placeholder="写下你的评论..." 
+           value="{{commentText}}"
+           bindinput="onCommentInput"
+           bindconfirm="submitComment"/>
+    <view class="submit-btn {{commentText ? 'active' : ''}}" bindtap="submitComment">发送</view>
+  </view>
+</view> 
