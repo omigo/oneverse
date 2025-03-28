@@ -11,14 +11,16 @@ page {
 
 /* 偈语内容区域 */
 .quote-section {
-  padding: 40rpx 40rpx 0;
+  padding: 0;
   box-sizing: border-box;
+  width: 100%;
 }
 
 .quote-content {
   display: flex;
   flex-direction: column;
   padding-top: 60rpx;
+  width: 100%;
 }
 
 .quote-text {
@@ -29,10 +31,12 @@ page {
   letter-spacing: 2rpx;
   margin-bottom: 30rpx;
   animation: fadeInUp 0.6s ease-out;
-  padding: 30rpx;
+  padding: 30rpx 40rpx;
   background: rgba(255, 255, 255, 0.08);
   border-radius: 24rpx;
   border: 1px solid rgba(255, 255, 255, 0.08);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .quote-text::before {
@@ -52,6 +56,9 @@ page {
   display: flex;
   gap: 20rpx;
   align-items: center;
+  padding: 0 40rpx;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .author, .source {
@@ -80,6 +87,9 @@ page {
 .tags {
   margin: 20rpx 0;
   animation: fadeIn 0.8s ease-out;
+  padding: 0 40rpx;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .tag-list {
@@ -103,11 +113,13 @@ page {
 
 .explanation {
   margin: 30rpx 0;
-  padding: 30rpx;
+  padding: 30rpx 40rpx;
   background: rgba(255, 255, 255, 0.08);
   border-radius: 24rpx;
   border: 1px solid rgba(255, 255, 255, 0.08);
   animation: fadeInUp 0.6s ease-out;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .explanation .label {
@@ -130,16 +142,35 @@ page {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  margin-top: 40rpx;
-  padding: 0 40rpx;
-  gap: 80rpx;
+  padding: 20rpx 40rpx;
+  gap: 60rpx;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .action-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4rpx;
+  gap: 8rpx;
+}
+
+.icon-count {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.icon {
+  width: 48rpx;
+  height: 48rpx;
+  opacity: 0.9;
+}
+
+.count {
+  font-size: 28rpx;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .share-btn {
@@ -151,33 +182,18 @@ page {
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
-  gap: 4rpx !important;
-  width: auto !important;
-  min-height: unset !important;
-  color: rgba(255, 255, 255, 0.9) !important;
-  font-weight: normal !important;
+  gap: 8rpx !important;
+  width: auto !important
 }
 
 .share-btn::after {
   display: none;
 }
 
-.share-btn text {
+.share-count {
   font-size: 24rpx !important;
   color: rgba(255, 255, 255, 0.9) !important;
   line-height: 1 !important;
-}
-
-.icon {
-  width: 48rpx;
-  height: 48rpx;
-  opacity: 0.9;
-}
-
-.icon-small {
-  width: 32rpx;
-  height: 32rpx;
-  opacity: 0.9;
 }
 
 .action-item text, .share-btn text {
@@ -205,21 +221,36 @@ page {
 /* 评论区域 */
 .comments-section {
   margin-top: 20rpx;
-  padding: 30rpx;
+  padding: 0;
   background: rgba(255, 255, 255, 0.08);
   border-radius: 24rpx;
   border: 1px solid rgba(255, 255, 255, 0.08);
   margin: 20rpx 0;
+  width: 100%;
 }
 
 .comments-list {
   max-height: calc(100vh - 600rpx);
+  width: 100%;
 }
 
 .comment-item {
   display: flex;
-  padding: 30rpx 0;
+  padding: 30rpx 40rpx;
   border-bottom: 1rpx solid rgba(255, 255, 255, 0.08);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.comment-item:first-child {
+  border-top-left-radius: 24rpx;
+  border-top-right-radius: 24rpx;
+}
+
+.comment-item:last-child {
+  border-bottom: none;
+  border-bottom-left-radius: 24rpx;
+  border-bottom-right-radius: 24rpx;
 }
 
 .avatar {
@@ -231,6 +262,7 @@ page {
 
 .comment-content {
   flex: 1;
+  width: 100%;
 }
 
 .comment-header {
@@ -266,7 +298,7 @@ page {
 .action {
   display: flex;
   align-items: center;
-  gap: 8rpx;
+  gap: 4rpx;
 }
 
 .replies {
@@ -361,4 +393,15 @@ page {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+.icon-small {
+  width: 32rpx;
+  height: 32rpx;
+  opacity: 0.9;
+}
+
+.action text {
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.6);
 }

@@ -26,17 +26,29 @@
     </view>
     <view class="actions">
       <view class="action-item" bindtap="handleLike">
-        <image class="icon" src="/assets/icons/{{quote.isLiked ? 'like-active' : 'like'}}.png"></image>
-        <text>{{quote.likes || 0}}</text>
+        <view class="icon-count">
+          <image class="icon" src="/assets/icons/{{quote.isLiked ? 'like-active' : 'like'}}.png"></image>
+          <text class="count">{{quote.likes || 0}}</text>
+        </view>
+      </view>
+      <view class="action-item" bindtap="handleComment">
+        <view class="icon-count">
+          <image class="icon" src="/assets/icons/comment.png"></image>
+          <text class="count">{{quote.comments || 0}}</text>
+        </view>
       </view>
       <view class="action-item" bindtap="handleCollect">
-        <image class="icon" src="/assets/icons/{{quote.isCollected ? 'collect-active' : 'collect'}}.png"></image>
-        <text>{{quote.collections || 0}}</text>
+        <view class="icon-count">
+          <image class="icon" src="/assets/icons/{{quote.isCollected ? 'collect-active' : 'collect'}}.png"></image>
+          <text class="count">{{quote.collections || 0}}</text>
+        </view>
       </view>
       <view class="action-item">
         <button class="share-btn" open-type="share">
-          <image class="icon" src="/assets/icons/share.png"></image>
-          <text>{{quote.shares || 0}}</text>
+          <view class="icon-count">
+            <image class="icon" src="/assets/icons/share.png"></image>
+            <text class="count">{{quote.shares || 0}}</text>
+          </view>
         </button>
       </view>
     </view>

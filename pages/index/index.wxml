@@ -43,6 +43,7 @@
         </view>
         <button class="share-btn" open-type="share" data-index="{{index}}">
           <image class="icon" src="/assets/icons/share.png"></image>
+          <text class="share-count">{{item.shares || 0}}</text>
         </button>
       </view>
     </view>

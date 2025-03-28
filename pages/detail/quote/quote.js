@@ -17,11 +17,7 @@ Page({
         const quote = {
             ...randomQuote,
             isLiked: false,
-            isCollected: false,
-            likes: randomQuote.likes || Math.floor(Math.random() * 100),
-            collections: Math.floor(Math.random() * 50),
-            shares: Math.floor(Math.random() * 30),
-            comments: Math.floor(Math.random() * 20)
+            isCollected: false
         };
 
         // 获取评论列表
@@ -166,6 +162,10 @@ Page({
 
     onShareAppMessage() {
         const { quote } = this.data;
+        // Increment share count
+        quote.shares = (quote.shares || 0) + 1;
+        this.setData({ quote });
+        
         return {
             title: quote.quote,
             path: `/pages/detail/quote/quote?id=${quote.id}`

@@ -25,9 +25,7 @@ Page({
             ...quote,
             isLoading: false,
             isLiked: false,
-            isCollected: false,
-            likes: Math.floor(Math.random() * 100),
-            comments: Math.floor(Math.random() * 20)
+            isCollected: false
         };
     },
 
@@ -121,7 +119,12 @@ Page({
 
     onShareAppMessage(e) {
         const { index } = e.target.dataset;
-        const quote = this.data.quotes[index || 0];
+        const { quotes } = this.data;
+        const quote = quotes[index || 0];
+        // 增加分享数
+        quote.shares = (quote.shares || 0) + 1;
+        this.setData({ quotes });
+        
         return {
             title: quote.quote,
             path: '/pages/index/index'
