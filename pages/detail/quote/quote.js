@@ -10,17 +10,18 @@ Page({
 
     onLoad(options) {
         // 获取偈语详情
+        const { id } = options;
         // TODO: 根据id从服务器获取偈语详情
+        const quotes = require('../../../data/quotes').default;
+        const randomQuote = id ? quotes.find(q => q.id === id) || getRandomQuote() : getRandomQuote();
         const quote = {
-            ...getRandomQuote(),
+            ...randomQuote,
             isLiked: false,
             isCollected: false,
-            likes: Math.floor(Math.random() * 100),
+            likes: randomQuote.likes || Math.floor(Math.random() * 100),
             collections: Math.floor(Math.random() * 50),
-            comments: Math.floor(Math.random() * 20),
-            tags: ['禅意', '智慧', '修行'],
-            source: '佛经',
-            explanation: '这是一段解释文字，阐述这句话的含义和背景。'
+            shares: Math.floor(Math.random() * 30),
+            comments: Math.floor(Math.random() * 20)
         };
 
         // 获取评论列表
@@ -29,7 +30,7 @@ Page({
             {
                 id: 1,
                 username: '禅心',
-                avatar: '/assets/icons/default-avatar.png',
+                avatar: '/assets/icons/profile.png',
                 content: '这句话说得很有道理，让人深思。',
                 time: '2024-03-15 10:30',
                 likes: 5,
@@ -45,7 +46,7 @@ Page({
             {
                 id: 2,
                 username: '修行者',
-                avatar: '/assets/icons/default-avatar.png',
+                avatar: '/assets/icons/profile.png',
                 content: '感谢分享这么好的偈语。',
                 time: '2024-03-15 09:15',
                 likes: 3,
@@ -69,13 +70,6 @@ Page({
         const { quote } = this.data;
         quote.isCollected = !quote.isCollected;
         this.setData({ quote });
-    },
-
-    // 处理举报
-    handleReport() {
-        wx.navigateTo({
-            url: `/pages/detail/report/report?id=${this.data.quote.id}`
-        });
     },
 
     // 导航到作者详情
@@ -143,7 +137,7 @@ Page({
         const newComment = {
             id: comments.length + 1,
             username: '我',
-            avatar: '/assets/icons/default-avatar.png',
+            avatar: '/assets/icons/profile.png',
             content: commentText,
             time: '刚刚',
             likes: 0,

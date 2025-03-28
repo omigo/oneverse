@@ -1,5 +1,6 @@
 const quotes = [
     {
+        id: '1',
         quote: "菩提本无树，明镜亦非台。本来无一物，何处惹尘埃。",
         author: "慧能",
         source: "六祖坛经",
@@ -11,6 +12,7 @@ const quotes = [
         isCollected: false
     },
     {
+        id: '2',
         quote: "春有百花秋有月，夏有凉风冬有雪。若无闲事挂心头，便是人间好时节。",
         author: "无门慧开",
         source: "无门关",
@@ -22,6 +24,7 @@ const quotes = [
         isCollected: false
     },
     {
+        id: '3',
         quote: "不是风动，不是幡动，仁者心动。",
         author: "六祖慧能",
         source: "六祖坛经",
@@ -33,6 +36,7 @@ const quotes = [
         isCollected: false
     },
     {
+        id: '4',
         quote: "心中有光明，脚下有力量。",
         author: "佛偈",
         source: "佛经",
@@ -44,6 +48,7 @@ const quotes = [
         isCollected: false
     },
     {
+        id: '5',
         quote: "不要用战术上的勤奋，掩盖战略上的懒惰。",
         author: "王阳明",
         source: "传习录",
@@ -55,6 +60,7 @@ const quotes = [
         isCollected: false
     },
     {
+        id: '6',
         quote: "种一棵树最好的时间是十年前，其次是现在。",
         author: "佚名",
         source: "谚语",
@@ -66,6 +72,7 @@ const quotes = [
         isCollected: false
     },
     {
+        id: '7',
         quote: "我们终将成为我们所追求的样子。",
         author: "马可·奥勒留",
         source: "沉思录",
@@ -77,6 +84,7 @@ const quotes = [
         isCollected: false
     },
     {
+        id: '8',
         quote: "把所有的失望打包送给昨天，把所有的希望打包送给明天，只剩下一个轻装的今天。",
         author: "泰戈尔",
         source: "飞鸟集",
@@ -88,6 +96,7 @@ const quotes = [
         isCollected: false
     },
     {
+        id: '9',
         quote: "内心的强大，就是明白人生没有假设。",
         author: "星云大师",
         source: "人生没有假设",
@@ -99,6 +108,7 @@ const quotes = [
         isCollected: false
     },
     {
+        id: '10',
         quote: "生活不是等待暴风雨过去，而是学会在雨中翩翩起舞。",
         author: "维维安·格林",
         source: "生活的艺术",

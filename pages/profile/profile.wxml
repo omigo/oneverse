@@ -2,7 +2,7 @@
   <!-- 用户信息 -->
   <view class="user-info">
     <view class="avatar-wrapper">
-      <image class="avatar" src="{{userInfo.avatarUrl || '/assets/icons/default-avatar.png'}}"></image>
+      <image class="avatar" src="{{userInfo.avatarUrl || '/assets/icons/profile.png'}}"></image>
       <button class="avatar-btn" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar" wx:if="{{!userInfo.avatarUrl}}">
         设置头像
       </button>

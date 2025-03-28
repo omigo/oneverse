@@ -111,6 +111,14 @@ Page({
         });
     },
 
+    // 导航到偈语详情页
+    navigateToDetail(e) {
+        const quote = e.currentTarget.dataset.quote;
+        wx.navigateTo({
+            url: `/pages/detail/quote/quote?id=${quote.id}`
+        });
+    },
+
     onShareAppMessage(e) {
         const { index } = e.target.dataset;
         const quote = this.data.quotes[index || 0];

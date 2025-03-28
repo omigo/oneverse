@@ -1,119 +1,215 @@
 .container {
   min-height: 100vh;
-  background: #f8f8f8;
+  background: linear-gradient(180deg, #000000 0%, #1a1a1a 100%);
   padding-bottom: 120rpx;
+  box-sizing: border-box;
+}
+
+page {
+  background: #1a1a1a;
 }
 
 /* 偈语内容区域 */
 .quote-section {
-  background: #fff;
-  padding: 40rpx;
+  padding: 40rpx 40rpx 0;
+  box-sizing: border-box;
 }
 
 .quote-content {
-  margin-bottom: 30rpx;
+  display: flex;
+  flex-direction: column;
+  padding-top: 60rpx;
 }
 
 .quote-text {
-  font-size: 36rpx;
-  color: #333;
+  font-size: 44rpx;
+  color: #fff;
   line-height: 1.6;
+  font-weight: 300;
+  letter-spacing: 2rpx;
+  margin-bottom: 30rpx;
+  animation: fadeInUp 0.6s ease-out;
+  padding: 30rpx;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 24rpx;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.quote-text::before {
+  content: '"';
+  position: absolute;
+  left: -40rpx;
+  top: -60rpx;
+  font-size: 120rpx;
+  color: #fff;
+  opacity: 0.15;
+  font-family: "Times New Roman", serif;
 }
 
 .meta-info {
-  margin: 30rpx 0;
+  margin: 20rpx 0;
+  animation: fadeIn 0.8s ease-out;
+  display: flex;
+  gap: 20rpx;
+  align-items: center;
 }
 
 .author, .source {
   display: flex;
   align-items: center;
-  margin: 10rpx 0;
+  font-size: 26rpx;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 300;
+  letter-spacing: 1rpx;
+}
+
+.source::before {
+  content: '·';
+  margin: 0 10rpx;
+  color: rgba(255, 255, 255, 0.3);
 }
 
 .label {
-  color: #666;
-  font-size: 28rpx;
-  margin-right: 10rpx;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .value {
-  color: #333;
-  font-size: 28rpx;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .tags {
   margin: 20rpx 0;
+  animation: fadeIn 0.8s ease-out;
 }
 
 .tag-list {
   display: flex;
   flex-wrap: wrap;
   gap: 16rpx;
-  margin-top: 10rpx;
 }
 
 .tag {
-  background: #f5f5f5;
+  background: rgba(255, 255, 255, 0.08);
   padding: 8rpx 20rpx;
   border-radius: 30rpx;
   font-size: 24rpx;
-  color: #666;
+  color: rgba(255, 255, 255, 0.6);
+  transition: all 0.3s ease;
+}
+
+.tag:active {
+  background: rgba(255, 255, 255, 0.15);
 }
 
 .explanation {
-  margin: 20rpx 0;
-  padding: 20rpx;
-  background: #f5f5f5;
-  border-radius: 12rpx;
+  margin: 30rpx 0;
+  padding: 30rpx;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 24rpx;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.explanation .label {
+  font-size: 28rpx;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 16rpx;
+  display: block;
+}
+
+.explanation .value {
+  font-size: 28rpx;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.9);
+  display: block;
+  font-weight: 300;
+  letter-spacing: 1rpx;
 }
 
 .actions {
   display: flex;
-  justify-content: space-around;
+  justify-content: flex-start;
   align-items: center;
-  padding: 20rpx 0;
-  border-top: 1rpx solid #eee;
+  margin-top: 40rpx;
+  padding: 0 40rpx;
+  gap: 80rpx;
 }
 
 .action-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8rpx;
+  gap: 4rpx;
+}
+
+.share-btn {
+  padding: 0 !important;
+  margin: 0 !important;
+  background: none !important;
+  border: none !important;
+  line-height: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 4rpx !important;
+  width: auto !important;
+  min-height: unset !important;
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-weight: normal !important;
+}
+
+.share-btn::after {
+  display: none;
+}
+
+.share-btn text {
+  font-size: 24rpx !important;
+  color: rgba(255, 255, 255, 0.9) !important;
+  line-height: 1 !important;
 }
 
 .icon {
   width: 48rpx;
   height: 48rpx;
+  opacity: 0.9;
 }
 
-.share-btn {
-  background: none;
-  padding: 0;
-  margin: 0;
+.icon-small {
+  width: 32rpx;
+  height: 32rpx;
+  opacity: 0.9;
+}
+
+.action-item text, .share-btn text {
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.9);
   line-height: 1;
-  border: none;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 
-.share-btn::after {
-  border: none;
+.action text {
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* 激活状态的图标 */
+.action-item.active .icon,
+.share-btn.active .icon {
+  opacity: 1;
+}
+
+.action-item.active text,
+.share-btn.active text {
+  color: rgba(255, 255, 255, 1);
 }
 
 /* 评论区域 */
 .comments-section {
   margin-top: 20rpx;
-  background: #fff;
-  padding: 40rpx;
-}
-
-.section-title {
-  font-size: 32rpx;
-  color: #333;
-  font-weight: 500;
-  margin-bottom: 30rpx;
+  padding: 30rpx;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 24rpx;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  margin: 20rpx 0;
 }
 
 .comments-list {
@@ -123,7 +219,7 @@
 .comment-item {
   display: flex;
   padding: 30rpx 0;
-  border-bottom: 1rpx solid #f5f5f5;
+  border-bottom: 1rpx solid rgba(255, 255, 255, 0.08);
 }
 
 .avatar {
@@ -146,18 +242,18 @@
 
 .username {
   font-size: 28rpx;
-  color: #333;
+  color: #fff;
   font-weight: 500;
 }
 
 .time {
   font-size: 24rpx;
-  color: #999;
+  color: rgba(255, 255, 255, 0.6);
 }
 
 .comment-text {
   font-size: 28rpx;
-  color: #333;
+  color: rgba(255, 255, 255, 0.9);
   line-height: 1.6;
 }
 
@@ -173,38 +269,29 @@
   gap: 8rpx;
 }
 
-.icon-small {
-  width: 32rpx;
-  height: 32rpx;
-}
-
-.action text {
-  font-size: 24rpx;
-  color: #999;
-}
-
 .replies {
   margin-top: 20rpx;
   padding: 20rpx;
-  background: #f8f8f8;
+  background: rgba(255, 255, 255, 0.08);
   border-radius: 12rpx;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .reply-item {
   margin: 10rpx 0;
   font-size: 26rpx;
-  color: #666;
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .reply-item .username {
-  color: #333;
+  color: #fff;
   margin-right: 10rpx;
 }
 
 .no-comment {
   text-align: center;
   padding: 100rpx 0;
-  color: #999;
+  color: rgba(255, 255, 255, 0.6);
   font-size: 28rpx;
 }
 
@@ -214,32 +301,64 @@
   bottom: 0;
   left: 0;
   right: 0;
-  background: #fff;
+  background: rgba(255, 255, 255, 0.05);
   padding: 20rpx;
   display: flex;
   align-items: center;
   gap: 20rpx;
-  box-shadow: 0 -2rpx 10rpx rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(10px);
 }
 
 .input {
   flex: 1;
   height: 80rpx;
-  background: #f5f5f5;
+  background: rgba(255, 255, 255, 0.08);
   border-radius: 40rpx;
   padding: 0 30rpx;
   font-size: 28rpx;
+  color: #fff;
 }
 
 .submit-btn {
   padding: 16rpx 30rpx;
   font-size: 28rpx;
-  color: #999;
-  background: #f5f5f5;
+  color: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.08);
   border-radius: 30rpx;
 }
 
 .submit-btn.active {
   color: #fff;
-  background: #333;
-} 
+  background: rgba(255, 255, 255, 0.15);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
