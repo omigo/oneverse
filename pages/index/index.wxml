@@ -1,14 +1,14 @@
 <swiper class="container" vertical="true" bindchange="onSwiperChange">
   <swiper-item wx:for="{{quotes}}" wx:key="index">
     <view class="quote-container" wx:if="{{!isLoading}}">
-      <view class="quote-content">
+      <view class="quote-content" bindtap="navigateToDetail" data-quote="{{item}}">
         <text class="quote-text">{{item.quote}}</text>
         <view class="meta-info">
           <view class="meta-row">
-            <view class="source" bindtap="navigateToSource" data-source="{{item.source}}" wx:if="{{item.source}}">
+            <view class="source" catchtap="navigateToSource" data-source="{{item.source}}" wx:if="{{item.source}}">
               <text class="value">《{{item.source}}》</text>
             </view>
-            <view class="author" bindtap="navigateToAuthor" data-author="{{item.author}}">
+            <view class="author" catchtap="navigateToAuthor" data-author="{{item.author}}">
               <text class="value">{{item.author}}</text>
             </view>
           </view>
@@ -17,8 +17,8 @@
         <view class="tags" wx:if="{{item.tags && item.tags.length > 0}}">
           <view class="tag-list">
             <view class="tag" wx:for="{{item.tags}}" wx:key="*this" wx:for-item="tag" 
-                  bindtap="navigateToTag" data-tag="{{tag}}">
-              <text>#{{tag}}</text>
+                  catchtap="navigateToTag" data-tag="{{tag}}">
+              <text>{{tag}}</text>
             </view>
           </view>
         </view>
@@ -39,11 +39,10 @@
         </view>
         <view class="action-item {{item.isCollected ? 'active' : ''}}" bindtap="handleCollect" data-index="{{index}}">
           <image class="icon" src="/assets/icons/{{item.isCollected ? 'collect-active' : 'collect'}}.png"></image>
-          <text>收藏</text>
+          <text>{{item.collections || 0}}</text>
         </view>
         <button class="share-btn" open-type="share" data-index="{{index}}">
           <image class="icon" src="/assets/icons/share.png"></image>
-          <text>分享</text>
         </button>
       </view>
     </view>
