@@ -20,6 +20,18 @@ Page({
         });
     },
 
+    handleAuthorInput(e) {
+        this.setData({
+            'formData.author': e.detail.value
+        });
+    },
+
+    handleSourceInput(e) {
+        this.setData({
+            'formData.source': e.detail.value
+        });
+    },
+
     handleExplanationInput(e) {
         const explanation = e.detail.value;
         this.setData({
@@ -106,4 +118,4 @@ Page({
             }
         });
     }
-}); 
+});

@@ -1,7 +1,9 @@
 .container {
-  min-height: 100vh;
+  width: 100%;
+  height: auto;
   background: #f8f8f8;
   padding: 30rpx;
+  display: block;
 }
 
 .form-group {
@@ -85,4 +87,4 @@
 .submit-btn[disabled] {
   background: #999;
   color: rgba(255, 255, 255, 0.6);
-} 
+}

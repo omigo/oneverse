@@ -1,5 +1,5 @@
 .container {
-  min-height: 100vh;
+  height: auto;
   background: linear-gradient(180deg, #000000 0%, #1a1a1a 100%);
   padding-bottom: 120rpx;
   box-sizing: border-box;
@@ -221,7 +221,6 @@ page {
 /* 评论区域 */
 .comments-section {
   margin-top: 20rpx;
-  padding: 0;
   background: rgba(255, 255, 255, 0.08);
   border-radius: 24rpx;
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -230,7 +229,7 @@ page {
 }
 
 .comments-list {
-  max-height: calc(100vh - 600rpx);
+  /* max-height: calc(100vh - 600rpx); */
   width: 100%;
 }
 
@@ -254,8 +253,8 @@ page {
 }
 
 .avatar {
-  width: 80rpx;
-  height: 80rpx;
+  width: 50rpx;
+  height: 50rpx;
   border-radius: 50%;
   margin-right: 20rpx;
 }

@@ -36,7 +36,11 @@
       <view class="tab {{currentTab === 'authors' ? 'active' : ''}}" 
             bindtap="switchTab" 
             data-tab="authors">
-        作者 ({{follows.authors.length}})
+        作者 ({{follows.authors.length}}）      </view>
+      <view class="tab {{currentTab === 'sources' ? 'active' : ''}}" 
+            bindtap="switchTab" 
+            data-tab="sources">
+        出处 ({{follows.sources.length}})
       </view>
       <view class="tab {{currentTab === 'tags' ? 'active' : ''}}" 
             bindtap="switchTab" 
@@ -67,12 +71,27 @@
             wx:key="id"
             bindtap="navigateToTag"
             data-tag="{{item}}">
-        <text class="name">#{{item.name}}</text>
+        <text class="name">{{item.name}}</text>
         <text class="quote-count">{{item.quoteCount}}条偈语</text>
       </view>
       <view class="empty" wx:if="{{!follows.tags.length}}">
         <text>暂无关注的标签</text>
       </view>
     </scroll-view>
+
+    <!-- 关注的出处列表 -->
+    <scroll-view class="follow-list" scroll-y="true" wx:if="{{currentTab === 'sources'}}">
+      <view class="follow-item" 
+            wx:for="{{follows.sources}}" 
+            wx:key="id"
+            bindtap="navigateToSource"
+            data-source="{{item}}">
+        <text class="name">{{item.name}}</text>
+        <text class="quote-count">{{item.quoteCount}}条偈语</text>
+      </view>
+      <view class="empty" wx:if="{{!follows.sources.length}}">
+        <text>暂无关注的出处</text>
+      </view>
+    </scroll-view>
   </view>
-</view> 
+</view>

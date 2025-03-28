@@ -1,11 +1,14 @@
 .container {
+  width: 100%;
   min-height: 100vh;
   background: #f8f8f8;
+  padding: 40rpx;
   padding-bottom: 40rpx;
 }
 
 /* 用户信息 */
 .user-info {
+  width: 100%;
   background: #fff;
   padding: 40rpx;
   display: flex;
@@ -56,6 +59,7 @@
 
 /* 数据统计 */
 .stats {
+  width: 100%;
   display: flex;
   justify-content: space-around;
   padding: 40rpx;
@@ -83,6 +87,7 @@
 
 /* 关注列表 */
 .follows {
+  width: 100%;
   margin-top: 20rpx;
   background: #fff;
   padding: 40rpx;
@@ -121,7 +126,7 @@
   bottom: -2rpx;
   left: 50%;
   transform: translateX(-50%);
-  width: 40rpx;
+  width: 100%;
   height: 4rpx;
   background: #333;
   border-radius: 2rpx;
@@ -158,4 +163,4 @@
   padding: 100rpx 0;
   color: #999;
   font-size: 28rpx;
-} 
+}

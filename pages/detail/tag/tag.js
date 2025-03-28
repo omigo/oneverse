@@ -73,8 +73,8 @@ Page({
     onShareAppMessage() {
         const { tag } = this.data;
         return {
-            title: `#${tag.name}# 相关的偈语`,
+            title: `${tag.name} 相关的偈语`,
             path: `/pages/detail/tag/tag?name=${tag.name}`
         };
     }
-}); 
+});

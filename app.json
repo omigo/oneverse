@@ -49,5 +49,19 @@
     ]
   },
   "style": "v2",
-  "sitemapLocation": "sitemap.json"
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents",
+  "componentPlaceholder": {
+    "button": "view",
+    "checkbox": "view",
+    "form": "view",
+    "input": "view",
+    "label": "view",
+    "picker": "view",
+    "picker-view": "view",
+    "radio": "view",
+    "slider": "view",
+    "switch": "view",
+    "textarea": "view"
+  }
 }

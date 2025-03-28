@@ -8,7 +8,8 @@ Page({
         },
         follows: {
             authors: [],
-            tags: []
+            tags: [],
+            sources: []
         },
         currentTab: 'authors'
     },
@@ -54,6 +55,14 @@ Page({
                     { id: 1, name: '禅意', quoteCount: 25 },
                     { id: 2, name: '智慧', quoteCount: 18 },
                     { id: 3, name: '修行', quoteCount: 12 }
+                ],
+                sources: [
+                    { id: 1, name: '金刚经', quoteCount: 30 },
+                    { id: 2, name: '心经', quoteCount: 20 },
+                    { id: 3, name: '坛经', quoteCount: 15 },
+                    { id: 4, name: '法华经', quoteCount: 18 },
+                    { id: 5, name: '楞严经', quoteCount: 12 },
+                    { id: 6, name: '维摩诘经', quoteCount: 8 }
                 ]
             }
         });
@@ -109,4 +118,4 @@ Page({
             url: `/pages/detail/tag/tag?name=${tag.name}`
         });
     }
-}); 
+});

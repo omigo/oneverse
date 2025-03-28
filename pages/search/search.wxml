@@ -85,7 +85,7 @@
             wx:key="index"
             bindtap="navigateToTag"
             data-tag="{{item}}">
-        <text class="name">#{{item.name}}</text>
+        <text class="name">{{item.name}}</text>
         <text class="quote-count">{{item.quoteCount}}条偈语</text>
       </view>
     </view>
@@ -96,4 +96,4 @@
       <text>暂无搜索结果</text>
     </view>
   </scroll-view>
-</view> 
+</view>
