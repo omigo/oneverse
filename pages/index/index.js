@@ -1,5 +1,3 @@
-const { getRandomQuote, fetchQuoteFromAPI } = require('../../data/quotes');
-
 Page({
     data: {
         quotes: [],
@@ -12,31 +10,53 @@ Page({
     },
 
     loadInitialQuotes() {
-        const quotes = [];
-        for (let i = 0; i < 3; i++) {
-            quotes.push(this.getQuote());
-        }
-        this.setData({ quotes, isLoading: false });
+        this.getQuote(3)
+            .then(quotes => {
+                this.setData({ quotes, isLoading: false });
+            })
+            .catch(err => {
+                console.error('Failed to load initial quotes:', err);
+            });
     },
 
-    getQuote() {
-        const quote = getRandomQuote();
-        return {
-            ...quote,
-            isLoading: false,
-            isLiked: false,
-            isCollected: false
-        };
+    getQuote(size) {
+        size = size || 1; // 默认获取一条
+        return new Promise((resolve, reject) => {
+            wx.cloud.database().collection('verses').aggregate()
+                .sample({ size })
+                .end()
+                .then(res => {
+                    const quotes = res.list.map(quote => ({
+                        ...quote,
+                        isLoading: false,
+                        isLiked: false,
+                        isCollected: false
+                    }));
+                    resolve(quotes);
+                })
+                .catch(err => {
+                    reject(err);
+                });
+        });
     },
-
     onSwiperChange(e) {
         const { current } = e.detail;
         const { quotes } = this.data;
 
         // 当滑动到倒数第二条时，添加新的内容
         if (current === quotes.length - 2) {
-            const newQuotes = [...quotes, this.getQuote()];
-            this.setData({ quotes: newQuotes });
+            this.getQuote(1)
+                .then(newverse => {
+                    const newquotes = [...quotes, ...newverse];
+                    if (newquotes.length > 256) {
+                        newquotes = newquotes.splice(-256);
+                    }
+                    console.log(newquotes);
+                    this.setData({ quotes: newquotes, isLoading: false });
+                })
+                .catch(err => {
+                    console.error('Failed to load initial quotes:', err);
+                });
         }
     },
 
@@ -124,7 +144,7 @@ Page({
         // 增加分享数
         quote.shares = (quote.shares || 0) + 1;
         this.setData({ quotes });
-        
+
         return {
             title: quote.quote,
             path: '/pages/index/index'
@@ -137,4 +157,4 @@ Page({
             wx.stopPullDownRefresh();
         });
     }
-}); 
+});

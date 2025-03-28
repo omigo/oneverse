@@ -102,20 +102,53 @@ Page({
             return;
         }
 
-        // TODO: 发布偈语的API调用
-        console.log('发布偈语:', formData);
-
-        wx.showToast({
-            title: '发布成功',
-            icon: 'success',
-            duration: 2000,
-            success: () => {
-                setTimeout(() => {
-                    wx.switchTab({
-                        url: '/pages/index/index'
-                    });
-                }, 2000);
+        // 获取云数据库引用
+        const db = wx.cloud.database();
+        // 获取verses集合引用
+        const verses = db.collection('verses');
+        // 获取当前最大id
+        verses.orderBy('id', 'desc').limit(1).get({
+            success: (res) => {
+                let maxId = 0;
+                if (res.data.length > 0) {
+                    maxId = res.data[0].id;
+                }
+                // 插入数据到verses集合，id加1
+                formData.id = maxId + 1;
+                verses.add({
+                    data: formData,
+                    success: (res) => {
+                        console.log('数据插入成功', res);
+                        wx.showToast({
+                            title: '发布成功',
+                            icon: 'success',
+                            duration: 2000,
+                            success: () => {
+                                setTimeout(() => {
+                                    wx.navigateTo({ // 修改跳转逻辑
+                                        url: `/pages/detail/quote?id=${formData.id}` // 跳转到明细页面并传递id
+                                    });
+                                }, 2000);
+                            }
+                        });
+                    },
+                    fail: (err) => {
+                        console.error('数据插入失败', err);
+                        wx.showToast({
+                            title: '发布失败',
+                            icon: 'none'
+                        });
+                    }
+                });
+            },
+            fail: (err) => {
+                console.error('获取最大id失败', err);
+                wx.showToast({
+                    title: '获取最大id失败',
+                    icon: 'none'
+                });
             }
         });
+        return;
     }
 });

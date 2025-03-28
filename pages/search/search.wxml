@@ -12,11 +12,11 @@
   </view>
 
   <view class="tabs">
-    <view class="tab-item {{currentTab === 'quotes' ? 'active' : ''}}" 
+    <view class="tab-item {{currentTab === 'verses' ? 'active' : ''}}" 
           bindtap="switchTab" 
-          data-tab="quotes">
+          data-tab="verses">
       <text>偈语</text>
-      <text class="count" wx:if="{{results.quotes.length}}">{{results.quotes.length}}</text>
+      <text class="count" wx:if="{{results.verses.length}}">{{results.verses.length}}</text>
     </view>
     <view class="tab-item {{currentTab === 'authors' ? 'active' : ''}}" 
           bindtap="switchTab" 
@@ -40,9 +40,9 @@
 
   <scroll-view class="results" scroll-y="true">
     <!-- 偈语搜索结果 -->
-    <view class="quotes-list" wx:if="{{currentTab === 'quotes'}}">
+    <view class="verses-list" wx:if="{{currentTab === 'verses'}}">
       <view class="quote-item" 
-            wx:for="{{results.quotes}}" 
+            wx:for="{{results.verses}}" 
             wx:key="index"
             bindtap="navigateToQuote"
             data-quote="{{item}}">
