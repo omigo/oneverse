@@ -1,10 +1,10 @@
-const { getRandomQuote } = require('../../../data/quotes');
+const { getRandomVerse } = require('../../../data/verses');
 
 Page({
     data: {
         tag: null,
         relatedTags: [],
-        quotes: []
+        verses: []
     },
 
     onLoad(options) {
@@ -13,7 +13,7 @@ Page({
         // TODO: 从服务器获取标签信息
         const tag = {
             name,
-            quoteCount: 35,
+            verseCount: 35,
             followerCount: 218,
             isFollowed: false,
             description: '这是标签的简介，介绍这个标签所代表的主题和内涵。'
@@ -21,23 +21,23 @@ Page({
 
         // TODO: 从服务器获取相关标签
         const relatedTags = [
-            { name: '修行', quoteCount: 28 },
-            { name: '智慧', quoteCount: 42 },
-            { name: '禅意', quoteCount: 35 },
-            { name: '佛法', quoteCount: 56 }
+            { name: '修行', verseCount: 28 },
+            { name: '智慧', verseCount: 42 },
+            { name: '禅意', verseCount: 35 },
+            { name: '佛法', verseCount: 56 }
         ];
 
         // TODO: 从服务器获取该标签下的偈语列表
-        const quotes = Array(5).fill(0).map((_, index) => ({
+        const verses = Array(5).fill(0).map((_, index) => ({
             id: index + 1,
-            ...getRandomQuote(),
+            ...getRandomVerse(),
             isLiked: false,
             likes: Math.floor(Math.random() * 100),
             comments: Math.floor(Math.random() * 20),
             source: '佛经'
         }));
 
-        this.setData({ tag, relatedTags, quotes });
+        this.setData({ tag, relatedTags, verses });
     },
 
     // 处理关注
@@ -55,10 +55,10 @@ Page({
     },
 
     // 导航到偈语详情
-    navigateToQuote(e) {
-        const { quote } = e.currentTarget.dataset;
+    navigateToVerse(e) {
+        const { verse } = e.currentTarget.dataset;
         wx.navigateTo({
-            url: `/pages/detail/quote/quote?id=${quote.id}`
+            url: `/pages/detail/verse/verse?id=${verse.id}`
         });
     },
 

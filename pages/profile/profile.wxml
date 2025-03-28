@@ -57,7 +57,7 @@
             bindtap="navigateToAuthor"
             data-author="{{item}}">
         <text class="name">{{item.name}}</text>
-        <text class="quote-count">{{item.quoteCount}}条偈语</text>
+        <text class="verse-count">{{item.verseCount}}条偈语</text>
       </view>
       <view class="empty" wx:if="{{!follows.authors.length}}">
         <text>暂无关注的作者</text>
@@ -72,7 +72,7 @@
             bindtap="navigateToTag"
             data-tag="{{item}}">
         <text class="name">{{item.name}}</text>
-        <text class="quote-count">{{item.quoteCount}}条偈语</text>
+        <text class="verse-count">{{item.verseCount}}条偈语</text>
       </view>
       <view class="empty" wx:if="{{!follows.tags.length}}">
         <text>暂无关注的标签</text>
@@ -87,7 +87,7 @@
             bindtap="navigateToSource"
             data-source="{{item}}">
         <text class="name">{{item.name}}</text>
-        <text class="quote-count">{{item.quoteCount}}条偈语</text>
+        <text class="verse-count">{{item.verseCount}}条偈语</text>
       </view>
       <view class="empty" wx:if="{{!follows.sources.length}}">
         <text>暂无关注的出处</text>

@@ -1,8 +1,6 @@
-const { getRandomQuote } = require('../../../data/quotes');
-
 Page({
     data: {
-        quote: null,
+        verse: null,
         comments: [],
         commentText: '',
         replyTo: null
@@ -10,62 +8,66 @@ Page({
 
     onLoad(options) {
         // 获取偈语详情
-        const { id } = options;
-        // TODO: 根据id从服务器获取偈语详情
-        const quotes = require('../../../data/quotes').default;
-        const randomQuote = id ? quotes.find(q => q.id === id) || getRandomQuote() : getRandomQuote();
-        const quote = {
-            ...randomQuote,
-            isLiked: false,
-            isCollected: false
-        };
-
-        // 获取评论列表
-        // TODO: 从服务器获取评论列表
-        const comments = [
-            {
-                id: 1,
-                username: '禅心',
-                avatar: '/assets/icons/profile.png',
-                content: '这句话说得很有道理，让人深思。',
-                time: '2024-03-15 10:30',
-                likes: 5,
-                isLiked: false,
-                replies: [
+        const { _id } = options;
+        // 根据id从云数据库verses集合中查询对应偈语
+        wx.cloud.database().collection('verses').doc(_id).get({
+            success: res => {
+                const verse = {
+                    ...res.data,
+                    isLiked: false,
+                    isCollected: false
+                };
+                // 获取评论列表
+                // TODO: 从服务器获取评论列表
+                const comments = [
                     {
-                        id: 11,
-                        username: '悟道',
-                        content: '确实如此，受益良多。'
+                        id: 1,
+                        username: '禅心',
+                        avatar: '/assets/icons/profile.png',
+                        content: '这句话说得很有道理，让人深思。',
+                        time: '2024-03-15 10:30',
+                        likes: 5,
+                        isLiked: false,
+                        replies: [
+                            {
+                                id: 11,
+                                username: '悟道',
+                                content: '确实如此，受益良多。'
+                            }
+                        ]
+                    },
+                    {
+                        id: 2,
+                        username: '修行者',
+                        avatar: '/assets/icons/profile.png',
+                        content: '感谢分享这么好的偈语。',
+                        time: '2024-03-15 09:15',
+                        likes: 3,
+                        isLiked: false
                     }
-                ]
-            },
-            {
-                id: 2,
-                username: '修行者',
-                avatar: '/assets/icons/profile.png',
-                content: '感谢分享这么好的偈语。',
-                time: '2024-03-15 09:15',
-                likes: 3,
-                isLiked: false
-            }
-        ];
+                ];
 
-        this.setData({ quote, comments });
+                this.setData({ verse, comments });
+            },
+            fail: err => {
+                console.error('获取偈语详情失败', err);
+            }
+        });
     },
 
     // 处理点赞
     handleLike() {
-        const { quote } = this.data;
-        quote.isLiked = !quote.isLiked;
-        quote.likes += quote.isLiked ? 1 : -1;
-        this.setData({ quote });
+        const { verse } = this.data;
+        verse.isLiked = !verse.isLiked;
+        verse.likes += verse.isLiked ? 1 : -1;
+        this.setData({ verse });
     },
 
     // 处理收藏
     handleCollect() {
-        const { quote } = this.data;
-        quote.isCollected = !quote.isCollected;
-        this.setData({ quote });
+        const { verse } = this.data;
+        verse.isCollected = !verse.isCollected;
+        this.setData({ verse });
     },
 
     // 导航到作者详情
@@ -161,14 +163,14 @@ Page({
     },
 
     onShareAppMessage() {
-        const { quote } = this.data;
+        const { verse } = this.data;
         // Increment share count
-        quote.shares = (quote.shares || 0) + 1;
-        this.setData({ quote });
-        
+        verse.shares = (verse.shares || 0) + 1;
+        this.setData({ verse });
+
         return {
-            title: quote.quote,
-            path: `/pages/detail/quote/quote?id=${quote.id}`
+            title: verse.verse,
+            path: `/pages/detail/detail?_id=${verse._id}`
         };
     }
-}); 
+});

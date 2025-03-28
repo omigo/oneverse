@@ -1,9 +1,9 @@
-const { getRandomQuote } = require('../../../data/quotes');
+const { getRandomverse } = require('../../data/verses');
 
 Page({
     data: {
         author: null,
-        quotes: []
+        verses: []
     },
 
     onLoad(options) {
@@ -12,23 +12,23 @@ Page({
         // TODO: 从服务器获取作者信息
         const author = {
             name,
-            quoteCount: 15,
+            verseCount: 15,
             followerCount: 128,
             isFollowed: false,
             description: '这是作者的简介，介绍作者的生平、思想等信息。'
         };
 
         // TODO: 从服务器获取作者的偈语列表
-        const quotes = Array(5).fill(0).map((_, index) => ({
+        const verses = Array(5).fill(0).map((_, index) => ({
             id: index + 1,
-            ...getRandomQuote(),
+            ...getRandomverse(),
             isLiked: false,
             likes: Math.floor(Math.random() * 100),
             comments: Math.floor(Math.random() * 20),
             source: '佛经'
         }));
 
-        this.setData({ author, quotes });
+        this.setData({ author, verses });
     },
 
     // 处理关注
@@ -46,10 +46,10 @@ Page({
     },
 
     // 导航到偈语详情
-    navigateToQuote(e) {
-        const { quote } = e.currentTarget.dataset;
+    navigateToVerse(e) {
+        const { verse } = e.currentTarget.dataset;
         wx.navigateTo({
-            url: `/pages/detail/quote/quote?id=${quote.id}`
+            url: `/pages/detail/verse/verse?id=${verse.id}`
         });
     },
 
@@ -60,4 +60,4 @@ Page({
             path: `/pages/detail/author/author?name=${author.name}`
         };
     }
-}); 
+});

@@ -47,22 +47,22 @@ Page({
         this.setData({
             follows: {
                 authors: [
-                    { id: 1, name: '慧能', quoteCount: 10 },
-                    { id: 2, name: '弘一法师', quoteCount: 8 },
-                    { id: 3, name: '六祖坛经', quoteCount: 15 }
+                    { id: 1, name: '慧能', verseCount: 10 },
+                    { id: 2, name: '弘一法师', verseCount: 8 },
+                    { id: 3, name: '六祖坛经', verseCount: 15 }
                 ],
                 tags: [
-                    { id: 1, name: '禅意', quoteCount: 25 },
-                    { id: 2, name: '智慧', quoteCount: 18 },
-                    { id: 3, name: '修行', quoteCount: 12 }
+                    { id: 1, name: '禅意', verseCount: 25 },
+                    { id: 2, name: '智慧', verseCount: 18 },
+                    { id: 3, name: '修行', verseCount: 12 }
                 ],
                 sources: [
-                    { id: 1, name: '金刚经', quoteCount: 30 },
-                    { id: 2, name: '心经', quoteCount: 20 },
-                    { id: 3, name: '坛经', quoteCount: 15 },
-                    { id: 4, name: '法华经', quoteCount: 18 },
-                    { id: 5, name: '楞严经', quoteCount: 12 },
-                    { id: 6, name: '维摩诘经', quoteCount: 8 }
+                    { id: 1, name: '金刚经', verseCount: 30 },
+                    { id: 2, name: '心经', verseCount: 20 },
+                    { id: 3, name: '坛经', verseCount: 15 },
+                    { id: 4, name: '法华经', verseCount: 18 },
+                    { id: 5, name: '楞严经', verseCount: 12 },
+                    { id: 6, name: '维摩诘经', verseCount: 8 }
                 ]
             }
         });

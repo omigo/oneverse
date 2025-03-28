@@ -1,53 +1,53 @@
 <view class="container">
   <!-- 偈语内容区域 -->
-  <view class="quote-section">
-    <view class="quote-content">
-      <text class="quote-text">{{quote.quote}}</text>
+  <view class="verse-section">
+    <view class="verse-content">
+      <text class="verse-text">{{verse.verse}}</text>
       <view class="meta-info">
-        <view class="author" bindtap="navigateToAuthor" data-author="{{quote.author}}">
-          <text class="value">{{quote.author}}</text>
+        <view class="author" bindtap="navigateToAuthor" data-author="{{verse.author}}">
+          <text class="value">{{verse.author}}</text>
         </view>
-        <view class="source" bindtap="navigateToSource" data-source="{{quote.source}}" wx:if="{{quote.source}}">
-          <text class="value">{{quote.source}}</text>
+        <view class="source" bindtap="navigateToSource" data-source="{{verse.source}}" wx:if="{{verse.source}}">
+          <text class="value">{{verse.source}}</text>
         </view>
       </view>
-      <view class="tags" wx:if="{{quote.tags && quote.tags.length > 0}}">
+      <view class="tags" wx:if="{{verse.tags && verse.tags.length > 0}}">
         <view class="tag-list">
           <text class="tag" 
-                wx:for="{{quote.tags}}" 
+                wx:for="{{verse.tags}}" 
                 wx:key="*this" 
                 bindtap="navigateToTag" 
                 data-tag="{{item}}">{{item}}</text>
         </view>
       </view>
-      <view class="explanation" wx:if="{{quote.explanation}}">
-        <text class="value">{{quote.explanation}}</text>
+      <view class="explanation" wx:if="{{verse.explanation}}">
+        <text class="value">{{verse.explanation}}</text>
       </view>
     </view>
     <view class="actions">
       <view class="action-item" bindtap="handleLike">
         <view class="icon-count">
-          <image class="icon" src="/assets/icons/{{quote.isLiked ? 'like-active' : 'like'}}.png"></image>
-          <text class="count">{{quote.likes || 0}}</text>
+          <image class="icon" src="/assets/icons/{{verse.isLiked ? 'like-active' : 'like'}}.png"></image>
+          <text class="count">{{verse.likes || 0}}</text>
         </view>
       </view>
       <view class="action-item" bindtap="handleComment">
         <view class="icon-count">
           <image class="icon" src="/assets/icons/comment.png"></image>
-          <text class="count">{{quote.comments || 0}}</text>
+          <text class="count">{{verse.comments || 0}}</text>
         </view>
       </view>
       <view class="action-item" bindtap="handleCollect">
         <view class="icon-count">
-          <image class="icon" src="/assets/icons/{{quote.isCollected ? 'collect-active' : 'collect'}}.png"></image>
-          <text class="count">{{quote.collections || 0}}</text>
+          <image class="icon" src="/assets/icons/{{verse.isCollected ? 'collect-active' : 'collect'}}.png"></image>
+          <text class="count">{{verse.collections || 0}}</text>
         </view>
       </view>
       <view class="action-item">
         <button class="share-btn" open-type="share">
           <view class="icon-count">
             <image class="icon" src="/assets/icons/share.png"></image>
-            <text class="count">{{quote.shares || 0}}</text>
+            <text class="count">{{verse.shares || 0}}</text>
           </view>
         </button>
       </view>

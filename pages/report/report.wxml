@@ -1,8 +1,8 @@
 <view class="container">
   <!-- 偈语预览 -->
-  <view class="quote-preview">
-    <text class="quote-text">{{quote.quote}}</text>
-    <text class="author">{{quote.author}}</text>
+  <view class="verse-preview">
+    <text class="verse-text">{{verse.verse}}</text>
+    <text class="author">{{verse.author}}</text>
   </view>
 
   <!-- 举报表单 -->
@@ -40,4 +40,4 @@
     <text>感谢您帮助我们维护平台环境</text>
     <text>我们会认真核实并处理您的举报</text>
   </view>
-</view> 
+</view>

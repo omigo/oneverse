@@ -1,22 +1,22 @@
 Page({
     data: {
         formData: {
-            quote: '',
+            verse: '',
             author: '',
             source: '',
             tags: [],
             explanation: ''
         },
         tagInput: '',
-        quoteLength: 0,
+        verseLength: 0,
         explanationLength: 0
     },
 
-    handleQuoteInput(e) {
-        const quote = e.detail.value;
+    handleverseInput(e) {
+        const verse = e.detail.value;
         this.setData({
-            'formData.quote': quote,
-            quoteLength: quote.length
+            'formData.verse': verse,
+            verseLength: verse.length
         });
     },
 
@@ -86,7 +86,7 @@ Page({
         const formData = e.detail.value;
         formData.tags = this.data.formData.tags;
 
-        if (!formData.quote.trim()) {
+        if (!formData.verse.trim()) {
             wx.showToast({
                 title: '请输入偈语内容',
                 icon: 'none'
@@ -126,7 +126,7 @@ Page({
                             success: () => {
                                 setTimeout(() => {
                                     wx.navigateTo({ // 修改跳转逻辑
-                                        url: `/pages/detail/quote?id=${formData.id}` // 跳转到明细页面并传递id
+                                        url: `/pages/detail/detail?_id=${res._id}` // 跳转到明细页面并传递id
                                     });
                                 }, 2000);
                             }

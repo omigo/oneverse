@@ -4,11 +4,11 @@
     "pages/search/search",
     "pages/publish/publish",
     "pages/profile/profile",
-    "pages/detail/quote/quote",
-    "pages/detail/author/author",
-    "pages/detail/source/source",
-    "pages/detail/tag/tag",
-    "pages/detail/report/report"
+    "pages/detail/detail",
+    "pages/author/author",
+    "pages/source/source",
+    "pages/tag/tag",
+    "pages/report/report"
   ],
   "window": {
     "backgroundTextStyle": "light",

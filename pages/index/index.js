@@ -1,38 +1,38 @@
 Page({
     data: {
-        quotes: [],
+        verses: [],
         isLoading: true,
         useAPI: false
     },
 
     onLoad() {
-        this.loadInitialQuotes();
+        this.loadInitialverses();
     },
 
-    loadInitialQuotes() {
-        this.getQuote(3)
-            .then(quotes => {
-                this.setData({ quotes, isLoading: false });
+    loadInitialverses() {
+        this.getverse(3)
+            .then(verses => {
+                this.setData({ verses, isLoading: false });
             })
             .catch(err => {
-                console.error('Failed to load initial quotes:', err);
+                console.error('Failed to load initial verses:', err);
             });
     },
 
-    getQuote(size) {
+    getverse(size) {
         size = size || 1; // 默认获取一条
         return new Promise((resolve, reject) => {
             wx.cloud.database().collection('verses').aggregate()
                 .sample({ size })
                 .end()
                 .then(res => {
-                    const quotes = res.list.map(quote => ({
-                        ...quote,
+                    const verses = res.list.map(verse => ({
+                        ...verse,
                         isLoading: false,
                         isLiked: false,
                         isCollected: false
                     }));
-                    resolve(quotes);
+                    resolve(verses);
                 })
                 .catch(err => {
                     reject(err);
@@ -41,21 +41,20 @@ Page({
     },
     onSwiperChange(e) {
         const { current } = e.detail;
-        const { quotes } = this.data;
+        const { verses } = this.data;
 
         // 当滑动到倒数第二条时，添加新的内容
-        if (current === quotes.length - 2) {
-            this.getQuote(1)
+        if (current === verses.length - 2) {
+            this.getverse(1)
                 .then(newverse => {
-                    const newquotes = [...quotes, ...newverse];
-                    if (newquotes.length > 256) {
-                        newquotes = newquotes.splice(-256);
+                    const newverses = [...verses, ...newverse];
+                    if (newverses.length > 256) {
+                        newverses = newverses.splice(-256);
                     }
-                    console.log(newquotes);
-                    this.setData({ quotes: newquotes, isLoading: false });
+                    this.setData({ verses: newverses, isLoading: false });
                 })
                 .catch(err => {
-                    console.error('Failed to load initial quotes:', err);
+                    console.error('Failed to load initial verses:', err);
                 });
         }
     },
@@ -64,36 +63,36 @@ Page({
     toggleDataSource() {
         this.setData({
             useAPI: !this.data.useAPI,
-            quotes: []
+            verses: []
         }, () => {
-            this.loadInitialQuotes();
+            this.loadInitialverses();
         });
     },
 
     // 处理点赞
     handleLike(e) {
         const { index } = e.currentTarget.dataset;
-        const { quotes } = this.data;
-        const quote = quotes[index];
-        quote.isLiked = !quote.isLiked;
-        quote.likes += quote.isLiked ? 1 : -1;
-        this.setData({ quotes });
+        const { verses } = this.data;
+        const verse = verses[index];
+        verse.isLiked = !verse.isLiked;
+        verse.likes += verse.isLiked ? 1 : -1;
+        this.setData({ verses });
     },
 
     // 处理收藏
     handleCollect(e) {
         const { index } = e.currentTarget.dataset;
-        const { quotes } = this.data;
-        const quote = quotes[index];
-        quote.isCollected = !quote.isCollected;
-        this.setData({ quotes });
+        const { verses } = this.data;
+        const verse = verses[index];
+        verse.isCollected = !verse.isCollected;
+        this.setData({ verses });
     },
 
     // 处理评论
     handleComment(e) {
         const { index } = e.currentTarget.dataset;
         wx.navigateTo({
-            url: `/pages/detail/quote/quote?index=${index}`
+            url: `/pages/detail/verse/verse?index=${index}`
         });
     },
 
@@ -109,7 +108,7 @@ Page({
     navigateToAuthor(e) {
         const { author } = e.currentTarget.dataset;
         wx.navigateTo({
-            url: `/pages/detail/author/author?name=${author}`
+            url: `/pages/author/author?name=${author}`
         });
     },
 
@@ -117,7 +116,7 @@ Page({
     navigateToSource(e) {
         const { source } = e.currentTarget.dataset;
         wx.navigateTo({
-            url: `/pages/detail/source/source?name=${source}`
+            url: `/pages/source/source?name=${source}`
         });
     },
 
@@ -125,35 +124,35 @@ Page({
     navigateToTag(e) {
         const { tag } = e.currentTarget.dataset;
         wx.navigateTo({
-            url: `/pages/detail/tag/tag?name=${tag}`
+            url: `/pages/tag/tag?name=${tag}`
         });
     },
 
     // 导航到偈语详情页
     navigateToDetail(e) {
-        const quote = e.currentTarget.dataset.quote;
+        const verse = e.currentTarget.dataset.verse;
         wx.navigateTo({
-            url: `/pages/detail/quote/quote?id=${quote.id}`
+            url: `/pages/detail?_id=${verse._id}`
         });
     },
 
     onShareAppMessage(e) {
         const { index } = e.target.dataset;
-        const { quotes } = this.data;
-        const quote = quotes[index || 0];
+        const { verses } = this.data;
+        const verse = verses[index || 0];
         // 增加分享数
-        quote.shares = (quote.shares || 0) + 1;
-        this.setData({ quotes });
+        verse.shares = (verse.shares || 0) + 1;
+        this.setData({ verses });
 
         return {
-            title: quote.quote,
+            title: verse.verse,
             path: '/pages/index/index'
         };
     },
 
     onPullDownRefresh() {
-        this.setData({ quotes: [] }, () => {
-            this.loadInitialQuotes();
+        this.setData({ verses: [] }, () => {
+            this.loadInitialverses();
             wx.stopPullDownRefresh();
         });
     }

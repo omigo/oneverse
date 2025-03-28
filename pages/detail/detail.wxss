@@ -10,20 +10,20 @@ page {
 }
 
 /* 偈语内容区域 */
-.quote-section {
+.verse-section {
   padding: 0;
   box-sizing: border-box;
   width: 100%;
 }
 
-.quote-content {
+.verse-content {
   display: flex;
   flex-direction: column;
   padding-top: 60rpx;
   width: 100%;
 }
 
-.quote-text {
+.verse-text {
   font-size: 44rpx;
   color: #fff;
   line-height: 1.6;
@@ -39,7 +39,7 @@ page {
   box-sizing: border-box;
 }
 
-.quote-text::before {
+.verse-text::before {
   content: '"';
   position: absolute;
   left: -40rpx;

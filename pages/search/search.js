@@ -1,12 +1,10 @@
-const { getAllQuotes } = require('../../data/quotes');
-
 Page({
     data: {
         searchText: '',
-        currentTab: 'quotes',
+        currentTab: 'verses',
         searched: false,
         results: {
-            quotes: [],
+            verses: [],
             authors: [],
             sources: [],
             tags: []
@@ -28,74 +26,62 @@ Page({
         const { searchText } = this.data;
         if (!searchText.trim()) return;
 
-        // 获取所有偈语
-        const allQuotes = getAllQuotes();
+        console.log('开始搜索：', searchText);
+        // 从云数据库verses集合中查询数据， limit 100
+        const db = wx.cloud.database();
+        db.collection('verses').where(db.command.or([
+            { verse: { $regex: searchText, $options: 'i' } },
+            { source: { $regex: searchText, $options: 'i' } },
+            { author: { $regex: searchText, $options: 'i' } },
+            { tags: db.command.in([searchText]) }
+        ])).get().then(res => {
+            console.log(res)
+            const allverses = res.data;
 
-        // 搜索结果
-        const results = {
-            quotes: [],
-            authors: new Map(),
-            sources: new Map(),
-            tags: new Map()
-        };
+            // 搜索结果
+            const results = {
+                verses: [],
+                authors: [],
+                sources: [],
+                tags: []
+            };
 
-        // 搜索偈语
-        allQuotes.forEach(quote => {
-            if (this.matchSearch(quote.quote, searchText) ||
-                this.matchSearch(quote.author, searchText)) {
-                results.quotes.push({
-                    ...quote,
-                    tags: ['禅意', '智慧', '修行'], // 示例标签
-                    source: '佛经' // 示例出处
-                });
-
-                // 统计作者
-                if (!results.authors.has(quote.author)) {
-                    results.authors.set(quote.author, {
-                        name: quote.author,
-                        quoteCount: 1
-                    });
-                } else {
-                    results.authors.get(quote.author).quoteCount++;
+            // 查询出来后，遍历verse，检查verse、source、author、tags字段是否包含searchText
+            // 如果包含，将verse、author、source、tags添加到results中
+            // 同时，统计作者、出处、标签的数量
+            for (const verse of allverses) {
+                if (this.matchSearch(verse.verse, searchText)) {
+                    results.verses.push(verse);
                 }
-
-                // 统计出处
-                const source = '佛经'; // 示例出处
-                if (!results.sources.has(source)) {
-                    results.sources.set(source, {
-                        name: source,
-                        quoteCount: 1
-                    });
-                } else {
-                    results.sources.get(source).quoteCount++;
+                if (this.matchSearch(verse.source, searchText)) {
+                    results.sources.push(verse);
                 }
-
-                // 统计标签
-                ['禅意', '智慧', '修行'].forEach(tag => {
-                    if (!results.tags.has(tag)) {
-                        results.tags.set(tag, {
-                            name: tag,
-                            quoteCount: 1
-                        });
-                    } else {
-                        results.tags.get(tag).quoteCount++;
+                if (this.matchSearch(verse.author, searchText)) {
+                    results.authors.push(verse);
+                }
+                for (const tag of verse.tags) {
+                    if (this.matchSearch(tag, searchText)) {
+                        results.tags.push(verse);
+                        break;
                     }
-                });
+                }
             }
-        });
 
-        // 转换Map为数组
-        const formattedResults = {
-            quotes: results.quotes,
-            authors: Array.from(results.authors.values()),
-            sources: Array.from(results.sources.values()),
-            tags: Array.from(results.tags.values())
-        };
+            // 转换Map为数组
+            const formattedResults = {
+                verses: results.verses,
+                authors: Array.from(results.authors.values()),
+                sources: Array.from(results.sources.values()),
+                tags: Array.from(results.tags.values())
+            };
 
-        this.setData({
-            results: formattedResults,
-            searched: true,
-            hasResults: formattedResults.quotes.length > 0
+            this.setData({
+                results: formattedResults,
+                searched: true,
+                hasResults: formattedResults.verses.length > 0
+            });
+        }).catch(err => {
+            console.error('查询云数据库失败：', err);
         });
     },
 
@@ -110,10 +96,10 @@ Page({
         });
     },
 
-    navigateToQuote(e) {
-        const { quote } = e.currentTarget.dataset;
+    navigateToverse(e) {
+        const { verse } = e.currentTarget.dataset;
         wx.navigateTo({
-            url: `/pages/detail/quote/quote?id=${quote.id}`
+            url: `/pages/detail/verse/verse?id=${verse.id}`
         });
     },
 
@@ -137,4 +123,4 @@ Page({
             url: `/pages/detail/tag/tag?name=${tag.name}`
         });
     }
-}); 
+});

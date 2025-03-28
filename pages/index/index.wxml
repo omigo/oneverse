@@ -1,8 +1,8 @@
 <swiper class="container" vertical="true" bindchange="onSwiperChange">
-  <swiper-item wx:for="{{quotes}}" wx:key="index">
-    <view class="quote-container" wx:if="{{!isLoading}}">
-      <view class="quote-content" bindtap="navigateToDetail" data-quote="{{item}}">
-        <text class="quote-text">{{item.quote}}</text>
+  <swiper-item wx:for="{{verses}}" wx:key="index">
+    <view class="verse-container" wx:if="{{!isLoading}}">
+      <view class="verse-content" bindtap="navigateToDetail" data-verse="{{item}}">
+        <text class="verse-text">{{item.verse}}</text>
         <view class="meta-info">
           <view class="meta-row">
             <view class="source" catchtap="navigateToSource" data-source="{{item.source}}" wx:if="{{item.source}}">
@@ -57,4 +57,4 @@
   <view class="data-source" bindtap="toggleDataSource" wx:if="{{useAPI}}">
     <text>API数据</text>
   </view>
-</view> 
+</view>
