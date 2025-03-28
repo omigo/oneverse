@@ -12,15 +12,15 @@
   ],
   "window": {
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#fff",
+    "navigationBarBackgroundColor": "#000",
     "navigationBarTitleText": "一句偈",
-    "navigationBarTextStyle": "black"
+    "navigationBarTextStyle": "white"
   },
   "tabBar": {
     "color": "#999999",
     "selectedColor": "#333333",
-    "backgroundColor": "#ffffff",
-    "borderStyle": "black",
+    "backgroundColor": "#000",
+    "borderStyle": "white",
     "list": [
       {
         "pagePath": "pages/index/index",
@@ -50,4 +50,4 @@
   },
   "style": "v2",
   "sitemapLocation": "sitemap.json"
-} 
+}
