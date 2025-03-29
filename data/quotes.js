@@ -1,7 +1,7 @@
-const quotes = [
+const verses = [
     {
         id: '1',
-        quote: "菩提本无树，明镜亦非台。本来无一物，何处惹尘埃。",
+        verse: "菩提本无树，明镜亦非台。本来无一物，何处惹尘埃。",
         author: "慧能",
         source: "六祖坛经",
         tags: ["禅宗", "顿悟", "智慧"],
@@ -15,7 +15,7 @@ const quotes = [
     },
     {
         id: '2',
-        quote: "春有百花秋有月，夏有凉风冬有雪。若无闲事挂心头，便是人间好时节。",
+        verse: "春有百花秋有月，夏有凉风冬有雪。若无闲事挂心头，便是人间好时节。",
         author: "无门慧开",
         source: "无门关",
         tags: ["禅意", "生活", "智慧"],
@@ -29,7 +29,7 @@ const quotes = [
     },
     {
         id: '3',
-        quote: "不是风动，不是幡动，仁者心动。",
+        verse: "不是风动，不是幡动，仁者心动。",
         author: "六祖慧能",
         source: "六祖坛经",
         tags: ["禅宗", "觉悟", "智慧"],
@@ -43,7 +43,7 @@ const quotes = [
     },
     {
         id: '4',
-        quote: "心中有光明，脚下有力量。",
+        verse: "心中有光明，脚下有力量。",
         author: "佛偈",
         source: "佛经",
         tags: ["禅意", "智慧", "修行"],
@@ -57,7 +57,7 @@ const quotes = [
     },
     {
         id: '5',
-        quote: "不要用战术上的勤奋，掩盖战略上的懒惰。",
+        verse: "不要用战术上的勤奋，掩盖战略上的懒惰。",
         author: "王阳明",
         source: "传习录",
         tags: ["思考", "智慧", "人生"],
@@ -71,7 +71,7 @@ const quotes = [
     },
     {
         id: '6',
-        quote: "种一棵树最好的时间是十年前，其次是现在。",
+        verse: "种一棵树最好的时间是十年前，其次是现在。",
         author: "佚名",
         source: "谚语",
         tags: ["行动", "智慧", "人生"],
@@ -85,7 +85,7 @@ const quotes = [
     },
     {
         id: '7',
-        quote: "我们终将成为我们所追求的样子。",
+        verse: "我们终将成为我们所追求的样子。",
         author: "马可·奥勒留",
         source: "沉思录",
         tags: ["哲学", "成长", "人生"],
@@ -99,7 +99,7 @@ const quotes = [
     },
     {
         id: '8',
-        quote: "把所有的失望打包送给昨天，把所有的希望打包送给明天，只剩下一个轻装的今天。",
+        verse: "把所有的失望打包送给昨天，把所有的希望打包送给明天，只剩下一个轻装的今天。",
         author: "泰戈尔",
         source: "飞鸟集",
         tags: ["诗意", "生活", "智慧"],
@@ -113,7 +113,7 @@ const quotes = [
     },
     {
         id: '9',
-        quote: "内心的强大，就是明白人生没有假设。",
+        verse: "内心的强大，就是明白人生没有假设。",
         author: "星云大师",
         source: "人生没有假设",
         tags: ["禅意", "人生", "智慧"],
@@ -127,7 +127,7 @@ const quotes = [
     },
     {
         id: '10',
-        quote: "生活不是等待暴风雨过去，而是学会在雨中翩翩起舞。",
+        verse: "生活不是等待暴风雨过去，而是学会在雨中翩翩起舞。",
         author: "维维安·格林",
         source: "生活的艺术",
         tags: ["生活", "智慧", "乐观"],
@@ -142,25 +142,25 @@ const quotes = [
 ];
 
 // 获取随机偈语
-const getRandomQuote = () => {
-    const index = Math.floor(Math.random() * quotes.length);
-    return quotes[index];
+const getRandomverse = () => {
+    const index = Math.floor(Math.random() * verses.length);
+    return verses[index];
 };
 
 // 获取所有偈语
-const getAllQuotes = () => {
-    return quotes;
+const getAllverses = () => {
+    return verses;
 };
 
 // API接口封装
-const fetchQuoteFromAPI = () => {
+const fetchverseFromAPI = () => {
     // TODO: 实现API调用
-    return Promise.resolve(getRandomQuote());
+    return Promise.resolve(getRandomverse());
 };
 
 export {
-    quotes as default,
-    getRandomQuote,
-    getAllQuotes,
-    fetchQuoteFromAPI
+    verses as default,
+    getRandomverse,
+    getAllverses,
+    fetchverseFromAPI
 }; 

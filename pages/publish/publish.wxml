@@ -1,14 +1,14 @@
 <view class="container">
-  <form bindsubmit="handleSubmit">
+  <form class="form1" bindsubmit="handleSubmit">
     <view class="form-group">
       <view class="label">偈语内容</view>
       <textarea class="input textarea" 
-                name="quote" 
+                name="verse" 
                 placeholder="请输入偈语内容" 
-                value="{{formData.quote}}"
+                value="{{formData.verse}}"
                 maxlength="200"
-                bindinput="handleQuoteInput"/>
-      <view class="word-count">{{quoteLength}}/200</view>
+                bindinput="handleverseInput"/>
+      <view class="word-count">{{verseLength}}/200</view>
     </view>
 
     <view class="form-group">
@@ -16,7 +16,8 @@
       <input class="input" 
              name="author" 
              placeholder="请输入作者" 
-             value="{{formData.author}}"/>
+             value="{{formData.author}}"
+             bindinput="handleAuthorInput"/>
     </view>
 
     <view class="form-group">
@@ -24,7 +25,8 @@
       <input class="input" 
              name="source" 
              placeholder="请输入出处" 
-             value="{{formData.source}}"/>
+             value="{{formData.source}}"
+             bindinput="handleSourceInput"/>
     </view>
 
     <view class="form-group">
@@ -55,8 +57,8 @@
 
     <button class="submit-btn" 
             form-type="submit" 
-            disabled="{{!formData.quote || !formData.author}}">
+            disabled="{{!formData.verse || !formData.author}}">
       发布
     </button>
   </form>
-</view> 
+</view>

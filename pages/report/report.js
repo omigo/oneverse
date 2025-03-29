@@ -1,5 +1,5 @@
 // pages/detail/report/report.js
-const { getRandomQuote } = require('../../../data/quotes');
+const { getRandomverse } = require('../../../data/verses');
 
 Page({
 
@@ -7,7 +7,7 @@ Page({
 	 * 页面的初始数据
 	 */
 	data: {
-		quote: null,
+		verse: null,
 		selectedReason: '',
 		description: '',
 		reasons: [
@@ -29,12 +29,12 @@ Page({
 		const { id } = options;
 
 		// TODO: 从服务器获取偈语信息
-		const quote = {
+		const verse = {
 			id,
-			...getRandomQuote()
+			...getRandomverse()
 		};
 
-		this.setData({ quote });
+		this.setData({ verse });
 	},
 
 	/**
@@ -100,7 +100,7 @@ Page({
 
 	// 提交举报
 	handleSubmit() {
-		const { quote, selectedReason, description } = this.data;
+		const { verse, selectedReason, description } = this.data;
 
 		if (!selectedReason) {
 			wx.showToast({
@@ -112,7 +112,7 @@ Page({
 
 		// TODO: 发送举报请求到服务器
 		const report = {
-			quoteId: quote.id,
+			verseId: verse.id,
 			reason: selectedReason,
 			description
 		};

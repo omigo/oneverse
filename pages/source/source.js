@@ -1,9 +1,9 @@
-const { getRandomQuote } = require('../../../data/quotes');
+const { getRandomverse } = require('../../data/verses');
 
 Page({
     data: {
         source: null,
-        quotes: []
+        verses: []
     },
 
     onLoad(options) {
@@ -12,22 +12,22 @@ Page({
         // TODO: 从服务器获取出处信息
         const source = {
             name,
-            quoteCount: 25,
+            verseCount: 25,
             followerCount: 156,
             isFollowed: false,
             description: '这是出处的简介，介绍这部经典的历史背景、主要内容等信息。'
         };
 
         // TODO: 从服务器获取该出处的偈语列表
-        const quotes = Array(5).fill(0).map((_, index) => ({
+        const verses = Array(5).fill(0).map((_, index) => ({
             id: index + 1,
-            ...getRandomQuote(),
+            ...getRandomverse(),
             isLiked: false,
             likes: Math.floor(Math.random() * 100),
             comments: Math.floor(Math.random() * 20)
         }));
 
-        this.setData({ source, quotes });
+        this.setData({ source, verses });
     },
 
     // 处理关注
@@ -45,10 +45,10 @@ Page({
     },
 
     // 导航到偈语详情
-    navigateToQuote(e) {
-        const { quote } = e.currentTarget.dataset;
+    navigateToverse(e) {
+        const { verse } = e.currentTarget.dataset;
         wx.navigateTo({
-            url: `/pages/detail/quote/quote?id=${quote.id}`
+            url: `/pages/detail/verse/verse?id=${verse.id}`
         });
     },
 

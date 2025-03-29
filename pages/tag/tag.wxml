@@ -2,14 +2,14 @@
   <!-- 标签信息 -->
   <view class="tag-info">
     <view class="header">
-      <text class="name">#{{tag.name}}</text>
+      <text class="name">{{tag.name}}</text>
       <view class="follow-btn {{tag.isFollowed ? 'active' : ''}}" bindtap="handleFollow">
         {{tag.isFollowed ? '已关注' : '关注'}}
       </view>
     </view>
     <view class="stats">
       <view class="stat-item">
-        <text class="count">{{tag.quoteCount}}</text>
+        <text class="count">{{tag.verseCount}}</text>
         <text class="label">偈语</text>
       </view>
       <view class="stat-item">
@@ -29,22 +29,22 @@
             wx:key="name"
             bindtap="navigateToTag"
             data-tag="{{item}}">
-        <text class="tag-name">#{{item.name}}</text>
-        <text class="quote-count">{{item.quoteCount}}条偈语</text>
+        <text class="tag-name">{{item.name}}</text>
+        <text class="verse-count">{{item.verseCount}}条偈语</text>
       </view>
     </view>
   </view>
 
   <!-- 标签下的偈语列表 -->
-  <view class="quotes-section">
+  <view class="verses-section">
     <view class="section-title">全部偈语</view>
-    <view class="quotes-list">
-      <view class="quote-item" 
-            wx:for="{{quotes}}" 
+    <view class="verses-list">
+      <view class="verse-item" 
+            wx:for="{{verses}}" 
             wx:key="id"
-            bindtap="navigateToQuote"
-            data-quote="{{item}}">
-        <text class="quote-text">{{item.quote}}</text>
+            bindtap="navigateToverse"
+            data-verse="{{item}}">
+        <text class="verse-text">{{item.verse}}</text>
         <view class="meta">
           <view class="info">
             <text class="author">{{item.author}}</text>
@@ -64,4 +64,4 @@
       </view>
     </view>
   </view>
-</view> 
+</view>
