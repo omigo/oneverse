@@ -2,7 +2,6 @@ Page({
     data: {
         verses: [],
         isLoading: true,
-        useAPI: false
     },
 
     onLoad() {
@@ -10,7 +9,7 @@ Page({
     },
 
     loadInitialverses() {
-        this.getverse(3)
+        this.getVerses(3)
             .then(verses => {
                 this.setData({ verses, isLoading: false });
             })
@@ -19,19 +18,41 @@ Page({
             });
     },
 
-    getverse(size) {
+    getVerses(size) {
         size = size || 1; // 默认获取一条
         return new Promise((resolve, reject) => {
-            wx.cloud.database().collection('verses').aggregate()
+            const db = wx.cloud.database();
+            const _ = db.command;
+            
+            // 先获取偈语
+            db.collection('verses').aggregate()
                 .sample({ size })
                 .end()
                 .then(res => {
-                    const verses = res.list.map(verse => ({
-                        ...verse,
-                        isLoading: false,
-                        isLiked: false,
-                        isCollected: false
-                    }));
+                    const verses = res.list;
+                    
+                    // 获取当前用户的点赞和收藏记录
+                    return Promise.all([
+                        db.collection('likes').where({
+                            verse_id: _.in(verses.map(v => v._id))
+                        }).get(),
+                        db.collection('collections').where({
+                            verse_id: _.in(verses.map(v => v._id))
+                        }).get()
+                    ]).then(([likesRes, collectionsRes]) => {
+                        // 处理点赞和收藏状态
+                        const likedVerses = new Set(likesRes.data.map(l => l.verse_id));
+                        const collectedVerses = new Set(collectionsRes.data.map(c => c.verse_id));
+                        
+                        return verses.map(verse => ({
+                            ...verse,
+                            isLoading: false,
+                            isLiked: likedVerses.has(verse._id),
+                            isCollected: collectedVerses.has(verse._id)
+                        }));
+                    });
+                })
+                .then(verses => {
                     resolve(verses);
                 })
                 .catch(err => {
@@ -40,33 +61,25 @@ Page({
         });
     },
     onSwiperChange(e) {
-        const { current } = e.detail;
+        const { current, source } = e.detail;
         const { verses } = this.data;
+        console.log(current, source, verses.length);
+        console.log(verses[current].verse);
 
-        // 当滑动到倒数第二条时，添加新的内容
-        if (current === verses.length - 2) {
-            this.getverse(1)
+        // 上滑查看下一条
+        if (current >= verses.length-1) {
+            this.getVerses(1)
                 .then(newverse => {
-                    const newverses = [...verses, ...newverse];
+                    let newverses = [...verses, ...newverse];
                     if (newverses.length > 256) {
-                        newverses = newverses.splice(-256);
+                        newverses = newverses.slice(-256); // 使用slice替代splice
                     }
                     this.setData({ verses: newverses, isLoading: false });
                 })
                 .catch(err => {
-                    console.error('Failed to load initial verses:', err);
+                    console.error('Failed to load new verse:', err);
                 });
         }
-    },
-
-    // 切换数据源
-    toggleDataSource() {
-        this.setData({
-            useAPI: !this.data.useAPI,
-            verses: []
-        }, () => {
-            this.loadInitialverses();
-        });
     },
 
     // 处理点赞
@@ -77,6 +90,39 @@ Page({
         verse.isLiked = !verse.isLiked;
         verse.likes += verse.isLiked ? 1 : -1;
         this.setData({ verses });
+
+        const db = wx.cloud.database();
+        
+        if (verse.isLiked) {
+            // 添加点赞记录
+            db.collection('likes').add({
+                data: {
+                    verse_id: verse._id,
+                    create_time: db.serverDate()
+                }
+            }).then(() => {
+                console.log('点赞成功');
+            }).catch(err => {
+                console.error('点赞失败:', err);
+                // 如果保存失败，回滚点赞状态
+                verse.isLiked = false;
+                verse.likes -= 1;
+                this.setData({ verses });
+            });
+        } else {
+            // 取消点赞，删除记录
+            db.collection('likes').where({
+                verse_id: verse._id
+            }).remove().then(() => {
+                console.log('取消点赞成功');
+            }).catch(err => {
+                console.error('取消点赞失败:', err);
+                // 如果删除失败，恢复点赞状态
+                verse.isLiked = true;
+                verse.likes += 1;
+                this.setData({ verses });
+            });
+        }
     },
 
     // 处理收藏
@@ -86,13 +132,44 @@ Page({
         const verse = verses[index];
         verse.isCollected = !verse.isCollected;
         this.setData({ verses });
+        
+        const db = wx.cloud.database();
+        
+        if (verse.isCollected) {
+            // 添加收藏记录
+            db.collection('collections').add({
+                data: {
+                    verse_id: verse._id,
+                    create_time: db.serverDate()
+                }
+            }).then(() => {
+                console.log('收藏成功');
+            }).catch(err => {
+                console.error('收藏失败:', err);
+                // 如果保存失败，回滚收藏状态
+                verse.isCollected = false;
+                this.setData({ verses });
+            });
+        } else {
+            // 取消收藏，删除记录
+            db.collection('collections').where({
+                verse_id: verse._id
+            }).remove().then(() => {
+                console.log('取消收藏成功');
+            }).catch(err => {
+                console.error('取消收藏失败:', err);
+                // 如果删除失败，恢复收藏状态
+                verse.isCollected = true;
+                this.setData({ verses });
+            });
+        }
     },
 
     // 处理评论
     handleComment(e) {
         const { index } = e.currentTarget.dataset;
         wx.navigateTo({
-            url: `/pages/detail/verse/verse?index=${index}`
+            url: `/pages/verse/verse?index=${index}`
         });
     },
 
@@ -100,7 +177,7 @@ Page({
     handleReport(e) {
         const { index } = e.currentTarget.dataset;
         wx.navigateTo({
-            url: `/pages/detail/report/report?index=${index}`
+            url: `/pages/report/report?index=${index}`
         });
     },
 
@@ -132,7 +209,7 @@ Page({
     navigateToDetail(e) {
         const verse = e.currentTarget.dataset.verse;
         wx.navigateTo({
-            url: `/pages/detail?_id=${verse._id}`
+            url: `/pages/detail/detail?_id=${verse._id}`
         });
     },
 
