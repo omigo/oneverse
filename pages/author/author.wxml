@@ -1,49 +1,46 @@
 <view class="container">
-  <!-- 作者信息 -->
-  <view class="author-info">
-    <view class="header">
-      <text class="name">{{author.name}}</text>
-      <view class="follow-btn {{author.isFollowed ? 'active' : ''}}" bindtap="handleFollow">
-        {{author.isFollowed ? '已关注' : '关注'}}
+  <block wx:if="{{!isLoading}}">
+    <!-- 作者信息 -->
+    <view class="author-info">
+      <view class="header">
+        <text class="author-name">{{author.name}}</text>
+        <text class="verse-count">{{author.verseCount || 0}}</text>
+      </view>
+      <view class="stats">
+        <view class="stat-item">
+          <text class="stat-value">{{author.totalLikes || 0}}</text>
+          <text class="stat-label">点赞</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-value">{{author.totalCollections || 0}}</text>
+          <text class="stat-label">收藏</text>
+        </view>
       </view>
     </view>
-    <view class="stats">
-      <view class="stat-item">
-        <text class="count">{{author.verseCount}}</text>
-        <text class="label">偈语</text>
-      </view>
-      <view class="stat-item">
-        <text class="count">{{author.followerCount}}</text>
-        <text class="label">关注者</text>
-      </view>
-    </view>
-    <text class="description" wx:if="{{author.description}}">{{author.description}}</text>
-  </view>
 
-  <!-- 作者的偈语列表 -->
-  <view class="verses-section">
-    <view class="section-title">全部偈语</view>
-    <view class="verses-list">
-      <view class="verse-item" 
-            wx:for="{{verses}}" 
-            wx:key="id"
-            bindtap="navigateToVerse"
-            data-verse="{{item}}">
-        <text class="verse-text">{{item.verse}}</text>
-        <view class="meta">
-          <text class="source" wx:if="{{item.source}}">{{item.source}}</text>
-          <view class="stats">
-            <view class="stat">
-              <image class="icon" src="/assets/icons/{{item.isLiked ? 'like-active' : 'like'}}.png"></image>
-              <text>{{item.likes || 0}}</text>
-            </view>
-            <view class="stat">
-              <image class="icon" src="/assets/icons/comment.png"></image>
-              <text>{{item.comments || 0}}</text>
+    <!-- 作者的偈语列表 -->
+    <view class="verses-section">
+      <view class="verses-list">
+        <view class="verse-item" wx:for="{{verses}}" wx:key="_id" bindtap="navigateToverse" data-verse="{{item}}">
+          <text class="verse-text">{{item.verse}}</text>
+          <view class="meta">
+            <text class="source">{{item.source}}</text>
+            <view class="stats">
+              <view class="stat">
+                <image class="icon" src="/assets/icons/{{item.isLiked ? 'like-active' : 'like'}}.png"></image>
+                <text>{{item.likes || 0}}</text>
+              </view>
+              <view class="stat">
+                <image class="icon" src="/assets/icons/comment.png"></image>
+                <text>{{item.comments || 0}}</text>
+              </view>
             </view>
           </view>
         </view>
       </view>
     </view>
+  </block>
+  <view class="loading" wx:else>
+    <text>正在加载...</text>
   </view>
 </view>

@@ -13,8 +13,19 @@
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  transition: transform 0.3s ease-out;
+  transition: all 0.3s ease-out;
   will-change: transform;
+  user-select: none;
+  -webkit-user-select: none;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.verse-container.slide-up {
+  animation: slideUp 0.5s ease-out;
+}
+
+.verse-container.slide-down {
+  animation: slideDown 0.5s ease-out;
 }
 
 .verse-content {
@@ -310,6 +321,28 @@
   from {
     opacity: 0;
     transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-100%);
   }
   to {
     opacity: 1;

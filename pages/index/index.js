@@ -12,11 +12,8 @@ Page({
     },
 
     onLoad() {
-        console.log("onLoad")
-        this.getOpenId().then((res) => {
-            console.log(res)
-            this.loadInitialverses();
-        });
+        this.getOpenId();
+        this.loadInitialverses();
     },
 
     // 获取用户openid

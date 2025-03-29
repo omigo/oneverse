@@ -2,7 +2,7 @@
       bindtouchstart="handleTouchStart"
       bindtouchmove="handleTouchMove"
       bindtouchend="handleTouchEnd">
-  <view class="verse-container" wx:if="{{!isLoading}}">
+  <view class="verse-container {{isLoading ? '' : (moveDistance > 0 ? 'slide-up' : 'slide-down')}}" wx:if="{{!isLoading}}">
     <view class="verse-content" bindtap="navigateToDetail" data-verse="{{verses[currentIndex]}}">
       <text class="verse-text">{{verses[currentIndex].verse}}</text>
       <view class="meta-info">
