@@ -2,16 +2,48 @@ Page({
     data: {
         verses: [],
         isLoading: true,
+        currentIndex: 0,
+        touchStartY: 0,
+        touchMoveY: 0,
+        touchEndY: 0,
+        minSwipeDistance: 50, // 最小滑动距离
+        preloadCount: 10,
+        openid: null, // 添加openid字段
     },
 
     onLoad() {
-        this.loadInitialverses();
+        console.log("onLoad")
+        this.getOpenId().then((res) => {
+            console.log(res)
+            this.loadInitialverses();
+        });
+    },
+
+    // 获取用户openid
+    getOpenId() {
+        return new Promise((resolve, reject) => {
+            wx.cloud.callFunction({
+                name: 'getOpenId'
+            }).then(res => {
+                console.log('获取openid成功：', res.result.openid);
+                this.setData({
+                    openid: res.result.openid
+                });
+                resolve(res.result.openid);
+            }).catch(err => {
+                console.error('获取openid失败：', err);
+                reject(err);
+            });
+        });
     },
 
     loadInitialverses() {
-        this.getVerses(3)
+        this.getVerses(this.data.preloadCount)
             .then(verses => {
-                this.setData({ verses, isLoading: false });
+                this.setData({ 
+                    verses, 
+                    isLoading: false,
+                });
             })
             .catch(err => {
                 console.error('Failed to load initial verses:', err);
@@ -34,9 +66,11 @@ Page({
                     // 获取当前用户的点赞和收藏记录
                     return Promise.all([
                         db.collection('likes').where({
+                            _openid: this.data.openid,
                             verse_id: _.in(verses.map(v => v._id))
                         }).get(),
                         db.collection('collections').where({
+                            _openid: this.data.openid,
                             verse_id: _.in(verses.map(v => v._id))
                         }).get()
                     ]).then(([likesRes, collectionsRes]) => {
@@ -60,26 +94,83 @@ Page({
                 });
         });
     },
-    onSwiperChange(e) {
-        const { current, source } = e.detail;
-        const { verses } = this.data;
-        console.log(current, source, verses.length);
-        console.log(verses[current].verse);
 
-        // 上滑查看下一条
-        if (current >= verses.length-1) {
-            this.getVerses(1)
-                .then(newverse => {
-                    let newverses = [...verses, ...newverse];
-                    if (newverses.length > 256) {
-                        newverses = newverses.slice(-256); // 使用slice替代splice
-                    }
-                    this.setData({ verses: newverses, isLoading: false });
-                })
-                .catch(err => {
-                    console.error('Failed to load new verse:', err);
-                });
+    // 触摸开始事件
+    handleTouchStart(e) {
+        this.setData({
+            touchStartY: e.touches[0].clientY
+        });
+    },
+
+    // 触摸移动事件
+    handleTouchMove(e) {
+        this.setData({
+            touchMoveY: e.touches[0].clientY
+        });
+    },
+
+    // 触摸结束事件
+    handleTouchEnd(e) {
+        const { touchStartY, touchMoveY, minSwipeDistance, currentIndex, verses } = this.data;
+        const touchEndY = e.changedTouches[0].clientY;
+        const moveDistance = touchStartY - touchEndY;
+
+        // 向上滑动且距离超过阈值
+        if (moveDistance > minSwipeDistance) {
+            // 先更新索引
+            const newIndex = currentIndex + 1;
+
+            if (newIndex <= verses.length-1) {
+                this.setData({ currentIndex: newIndex });
+            }
+            
+            // 如果是最后一条，提前加载新偈语
+            if (newIndex >= verses.length-1) {
+                this.getVerses(this.data.preloadCount)
+                    .then(newverse => {
+                        let newverses = [...verses, ...newverse];
+                        if (newverses.length > 256) {
+                            newverses = newverses.slice(-256);
+                        }
+                        this.setData({ verses: newverses });
+                    })
+                    .catch(err => {
+                        console.error('Failed to load new verse:', err);
+                        // 加载失败时回退索引
+                        this.setData({ currentIndex: currentIndex });
+                    });
+            }
         }
+        // 向下滑动且距离超过阈值
+        else if (moveDistance < -minSwipeDistance) {
+            // 先更新索引
+            const newIndex = currentIndex - 1;
+
+            if (newIndex >= 0) {
+                this.setData({ currentIndex: newIndex });
+            } else {
+                this.getVerses(1)
+                    .then(newverse => {
+                        let newverses = [...newverse, ...verses];
+                        if (newverses.length > 256) {
+                            newverses = newverses.slice(0, 256);
+                        }
+                        this.setData({ 
+                            verses: newverses,
+                            currentIndex: 0
+                        });
+                    })
+                    .catch(err => {
+                        console.error('Failed to load new verse:', err);
+                        // 加载失败时回退索引
+                        this.setData({ currentIndex: currentIndex });
+                    });
+            }
+        }
+
+        this.setData({
+            touchEndY: touchEndY
+        });
     },
 
     // 处理点赞

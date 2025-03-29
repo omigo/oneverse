@@ -1,63 +1,58 @@
-<swiper class="container" 
-        vertical="true" 
-        bindchange="onSwiperChange"
-        circular="true"
-        previous-margin="0"
-        next-margin="0"
-        autoplay="false"
-        interval="300000">
-  <swiper-item wx:for="{{verses}}" wx:key="index">
-    <view class="verse-container" wx:if="{{!isLoading}}">
-      <view class="verse-content" bindtap="navigateToDetail" data-verse="{{item}}">
-        <text class="verse-text">{{item.verse}}</text>
-        <view class="meta-info">
-          <view class="meta-row">
-            <view class="source" catchtap="navigateToSource" data-source="{{item.source}}" wx:if="{{item.source}}">
-              <text class="value">《{{item.source}}》</text>
-            </view>
-            <view class="author" catchtap="navigateToAuthor" data-author="{{item.author}}">
-              <text class="value">{{item.author}}</text>
-            </view>
+<view class="container" 
+      bindtouchstart="handleTouchStart"
+      bindtouchmove="handleTouchMove"
+      bindtouchend="handleTouchEnd">
+  <view class="verse-container" wx:if="{{!isLoading}}">
+    <view class="verse-content" bindtap="navigateToDetail" data-verse="{{verses[currentIndex]}}">
+      <text class="verse-text">{{verses[currentIndex].verse}}</text>
+      <view class="meta-info">
+        <view class="meta-row">
+          <view class="source" catchtap="navigateToSource" data-source="{{verses[currentIndex].source}}" wx:if="{{verses[currentIndex].source}}">
+            <text class="value">《{{verses[currentIndex].source}}》</text>
+          </view>
+          <view class="author" catchtap="navigateToAuthor" data-author="{{verses[currentIndex].author}}">
+            <text class="value">{{verses[currentIndex].author}}</text>
           </view>
         </view>
-        
-        <view class="tags" wx:if="{{item.tags && item.tags.length > 0}}">
-          <view class="tag-list">
-            <view class="tag" wx:for="{{item.tags}}" wx:key="*this" wx:for-item="tag" 
-                  catchtap="navigateToTag" data-tag="{{tag}}">
-              <text>{{tag}}</text>
-            </view>
+      </view>
+      
+      <view class="tags" wx:if="{{verses[currentIndex].tags && verses[currentIndex].tags.length > 0}}">
+        <view class="tag-list">
+          <view class="tag" wx:for="{{verses[currentIndex].tags}}" wx:key="*this" wx:for-item="tag" 
+                catchtap="navigateToTag" data-tag="{{tag}}">
+            <text>{{tag}}</text>
           </view>
-        </view>
-
-        <view class="explanation" wx:if="{{item.explanation}}">
-          <text class="value">{{item.explanation}}</text>
         </view>
       </view>
 
-      <view class="actions">
-        <view class="action-item {{item.isLiked ? 'active' : ''}}" bindtap="handleLike" data-index="{{index}}">
-          <image class="icon" src="/assets/icons/{{item.isLiked ? 'like-active' : 'like'}}.png"></image>
-          <text>{{item.likes || 0}}</text>
-        </view><view class="action-item {{item.isCollected ? 'active' : ''}}" bindtap="handleCollect" data-index="{{index}}">
-          <image class="icon" src="/assets/icons/{{item.isCollected ? 'collect-active' : 'collect'}}.png"></image>
-          <text>{{item.collections || 0}}</text>
-        </view>
-        <view class="action-item" bindtap="handleComment" data-index="{{index}}">
-          <image class="icon" src="/assets/icons/comment.png"></image>
-          <text>{{item.comments || 0}}</text>
-        </view>
-        <button class="share-btn" open-type="share" data-index="{{index}}">
-          <image class="icon" src="/assets/icons/share.png"></image>
-          <text class="share-count">{{item.shares || 0}}</text>
-        </button>
+      <view class="explanation" wx:if="{{verses[currentIndex].explanation}}">
+        <text class="value">{{verses[currentIndex].explanation}}</text>
       </view>
     </view>
-    <view class="loading" wx:else>
-      <text>正在加载偈语...</text>
+
+    <view class="actions">
+      <view class="action-item {{verses[currentIndex].isLiked ? 'active' : ''}}" bindtap="handleLike" data-index="{{currentIndex}}">
+        <image class="icon" src="/assets/icons/{{verses[currentIndex].isLiked ? 'like-active' : 'like'}}.png"></image>
+        <text>{{verses[currentIndex].likes || 0}}</text>
+      </view>
+      <view class="action-item {{verses[currentIndex].isCollected ? 'active' : ''}}" bindtap="handleCollect" data-index="{{currentIndex}}">
+        <image class="icon" src="/assets/icons/{{verses[currentIndex].isCollected ? 'collect-active' : 'collect'}}.png"></image>
+        <text>{{verses[currentIndex].collections || 0}}</text>
+      </view>
+      <view class="action-item" bindtap="handleComment" data-index="{{currentIndex}}">
+        <image class="icon" src="/assets/icons/comment.png"></image>
+        <text>{{verses[currentIndex].comments || 0}}</text>
+      </view>
+      <button class="share-btn" open-type="share" data-index="{{currentIndex}}">
+        <image class="icon" src="/assets/icons/share.png"></image>
+        <text class="share-count">{{verses[currentIndex].shares || 0}}</text>
+      </button>
     </view>
-  </swiper-item>
-</swiper>
+  </view>
+  <view class="loading" wx:else>
+    <text>正在加载偈语...</text>
+  </view>
+</view>
 
 <view class="controls">
   <view class="data-source" bindtap="toggleDataSource" wx:if="{{useAPI}}">

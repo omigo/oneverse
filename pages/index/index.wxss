@@ -1,14 +1,20 @@
 .container {
   height: 100vh;
   background: linear-gradient(180deg, #000000 0%, #1a1a1a 100%);
+  position: relative;
+  overflow: hidden;
+  touch-action: pan-y;
 }
 
 .verse-container {
   height: 100%;
+  width: 100%;
   padding: 40rpx 40rpx 0;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  transition: transform 0.3s ease-out;
+  will-change: transform;
 }
 
 .verse-content {
@@ -269,9 +275,15 @@
 }
 
 @keyframes shimmer {
-  0% { opacity: 0.5; }
-  50% { opacity: 0.9; }
-  100% { opacity: 0.5; }
+  0% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.5;
+  }
 }
 
 @keyframes fadeIn {
@@ -286,7 +298,7 @@
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(30rpx);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
@@ -297,7 +309,7 @@
 @keyframes slideInUp {
   from {
     opacity: 0;
-    transform: translateY(40rpx);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;

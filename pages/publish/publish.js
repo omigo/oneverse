@@ -9,7 +9,30 @@ Page({
         },
         tagInput: '',
         verseLength: 0,
-        explanationLength: 0
+        explanationLength: 0,
+        openid: null
+    },
+
+    onLoad() {
+        this.getOpenId();
+    },
+
+    // 获取用户openid
+    getOpenId() {
+        return new Promise((resolve, reject) => {
+            wx.cloud.callFunction({
+                name: 'getOpenId'
+            }).then(res => {
+                console.log('获取openid成功：', res.result.openid);
+                this.setData({
+                    openid: res.result.openid
+                });
+                resolve(res.result.openid);
+            }).catch(err => {
+                console.error('获取openid失败：', err);
+                reject(err);
+            });
+        });
     },
 
     handleverseInput(e) {
@@ -102,6 +125,14 @@ Page({
             return;
         }
 
+        if (!this.data.openid) {
+            wx.showToast({
+                title: '请稍后重试',
+                icon: 'none'
+            });
+            return;
+        }
+
         // 获取云数据库引用
         const db = wx.cloud.database();
         // 获取verses集合引用
@@ -115,6 +146,7 @@ Page({
                 }
                 // 插入数据到verses集合，id加1
                 formData.id = maxId + 1;
+                formData.create_time = db.serverDate(); // 添加创建时间
                 verses.add({
                     data: formData,
                     success: (res) => {
@@ -125,8 +157,8 @@ Page({
                             duration: 2000,
                             success: () => {
                                 setTimeout(() => {
-                                    wx.navigateTo({ // 修改跳转逻辑
-                                        url: `/pages/detail/detail?_id=${res._id}` // 跳转到明细页面并传递id
+                                    wx.navigateTo({
+                                        url: `/pages/detail/detail?_id=${res._id}`
                                     });
                                 }, 2000);
                             }

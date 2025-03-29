@@ -43,5 +43,7 @@
 	"editorSetting": {
 		"tabIndent": "tab",
 		"tabSize": 4
-	}
+	},
+	"cloudfunctionRoot": "cloudfunctions/",
+	"cloudfunctionTemplateRoot": "cloudfunctionTemplate/"
 }
