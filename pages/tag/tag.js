@@ -28,13 +28,14 @@ Page({
             db.collection('verses')
                 .aggregate()
                 .match({
-                    tags: db.command.in([tagName])
+                    tags: tagName
                 })
                 .group({
                     _id: null,
                     verseCount: $.sum(1),
                     totalLikes: $.sum($.ifNull(['$likes', 0])),
                     totalCollections: $.sum($.ifNull(['$collections', 0])),
+                    description: $.first('$tag_description')
                 })
                 .end(),
             

@@ -62,7 +62,7 @@
         <image class="avatar" src="{{item.avatar || '/assets/icons/profile.png'}}"></image>
         <view class="comment-content">
           <view class="comment-header">
-            <text class="username">{{item.username}}</text>
+            <text class="username">{{item.username||'心心'}}</text>
             <text class="time">{{item.time}}</text>
           </view>
           <text class="comment-text">{{item.content}}</text>

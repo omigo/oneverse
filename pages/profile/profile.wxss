@@ -1,166 +1,257 @@
 .container {
-  width: 100%;
   min-height: 100vh;
-  background: #f8f8f8;
-  padding: 40rpx;
-  padding-bottom: 40rpx;
+  background: #1a1a1a;
+  padding: 30rpx;
 }
 
-/* 用户信息 */
+/* 用户信息区域 */
 .user-info {
-  width: 100%;
-  background: #fff;
-  padding: 40rpx;
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 40rpx 0;
+  margin-bottom: 40rpx;
 }
 
-.avatar-wrapper {
-  position: relative;
-  width: 160rpx;
-  height: 160rpx;
-  margin-bottom: 20rpx;
+.avatar-btn {
+  background: none;
+  padding: 0;
+  margin: 0;
+  line-height: 1;
+}
+
+.avatar-btn::after {
+  display: none;
 }
 
 .avatar {
   width: 160rpx;
   height: 160rpx;
   border-radius: 50%;
-}
-
-.avatar-btn {
-  position: absolute;
-  bottom: -20rpx;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 24rpx;
-  padding: 8rpx 20rpx;
-  background: #333;
-  color: #fff;
-  border-radius: 30rpx;
-  white-space: nowrap;
-}
-
-.nickname {
-  font-size: 32rpx;
-  color: #333;
-  margin: 20rpx 0;
+  margin-bottom: 20rpx;
 }
 
 .login-btn {
+  background: none;
+  color: #ffffff;
+  font-size: 32rpx;
+  padding: 0;
+  margin: 0;
+  line-height: 1;
+}
+
+.login-btn::after {
+  display: none;
+}
+
+.nickname {
+  color: #ffffff;
+  font-size: 32rpx;
   margin-top: 20rpx;
+}
+
+/* 收藏列表 */
+.collection-list {
+  background: #2a2a2a;
+  border-radius: 20rpx;
+  padding: 30rpx;
+}
+
+.title {
+  color: #ffffff;
+  font-size: 36rpx;
+  font-weight: bold;
+  margin-bottom: 30rpx;
+}
+
+.loading, .empty {
+  color: rgba(255, 255, 255, 0.5);
+  text-align: center;
+  padding: 40rpx 0;
   font-size: 28rpx;
-  padding: 16rpx 40rpx;
-  background: #333;
-  color: #fff;
-  border-radius: 40rpx;
 }
 
-/* 数据统计 */
-.stats {
-  width: 100%;
-  display: flex;
-  justify-content: space-around;
-  padding: 40rpx;
-  background: #fff;
-  margin-top: 20rpx;
-}
-
-.stat-item {
+.verse-list {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  gap: 30rpx;
 }
 
-.count {
-  font-size: 36rpx;
-  color: #333;
-  font-weight: 500;
+.verse-item {
+  background: #333333;
+  border-radius: 16rpx;
+  padding: 30rpx;
 }
 
-.label {
-  font-size: 24rpx;
-  color: #999;
-  margin-top: 10rpx;
+.verse-content {
+  margin-bottom: 20rpx;
 }
 
-/* 关注列表 */
-.follows {
-  width: 100%;
-  margin-top: 20rpx;
-  background: #fff;
-  padding: 40rpx;
-}
-
-.section-title {
+.text {
+  color: #ffffff;
   font-size: 32rpx;
-  color: #333;
-  font-weight: 500;
-  margin-bottom: 30rpx;
+  line-height: 1.6;
+  display: block;
+  margin-bottom: 16rpx;
 }
 
-.follow-tabs {
+.info {
   display: flex;
-  border-bottom: 2rpx solid #f5f5f5;
-  margin-bottom: 30rpx;
-}
-
-.tab {
-  flex: 1;
-  text-align: center;
+  gap: 16rpx;
   font-size: 28rpx;
-  color: #666;
-  padding: 20rpx 0;
-  position: relative;
 }
 
-.tab.active {
-  color: #333;
-  font-weight: 500;
+.author, .source {
+  color: rgba(255, 255, 255, 0.5);
 }
 
-.tab.active::after {
-  content: '';
-  position: absolute;
-  bottom: -2rpx;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  height: 4rpx;
-  background: #333;
-  border-radius: 2rpx;
-}
-
-.follow-list {
-  max-height: 600rpx;
-}
-
-.follow-item {
+.actions {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 30rpx 0;
-  border-bottom: 2rpx solid #f5f5f5;
+  padding-top: 20rpx;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.follow-item:last-child {
-  border-bottom: none;
+.stats {
+  display: flex;
+  gap: 20rpx;
 }
 
-.name {
+.likes, .comments {
+  color: rgba(255, 255, 255, 0.5);
   font-size: 28rpx;
-  color: #333;
+}
+
+.uncollect {
+  padding: 10rpx;
+}
+
+.uncollect .icon {
+  width: 40rpx;
+  height: 40rpx;
+}
+
+/* 偈语列表 */
+.verses-section {
+  margin-top: 20rpx;
+  background: #111;
+}
+
+.section-header {
+  padding: 32rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.section-title {
+  font-size: 36rpx;
+  color: #fff;
+  font-weight: 500;
 }
 
 .verse-count {
-  font-size: 24rpx;
-  color: #999;
+  font-size: 32rpx;
+  color: rgba(255, 255, 255, 0.5);
 }
 
-.empty {
-  text-align: center;
-  padding: 100rpx 0;
-  color: #999;
+.verse-item:last-child {
+  border-bottom: none;
+}
+
+.verse-text {
+  font-size: 34rpx;
+  color: #fff;
+  line-height: 1.6;
+  letter-spacing: 1rpx;
+  margin-bottom: 24rpx;
+}
+
+.meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.icon {
+  width: 32rpx;
+  height: 32rpx;
+  opacity: 0.6;
+}
+
+.stat text {
   font-size: 28rpx;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.loading text {
+  color: #fff;
+  animation: shimmer 2s infinite;
+  font-weight: 300;
+}
+
+@keyframes shimmer {
+  0% { opacity: 0.5; }
+  50% { opacity: 1; }
+  100% { opacity: 0.5; }
+}
+
+.comment-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.comment-box {
+  width: 80%;
+  background: #111;
+  border-radius: 16rpx;
+  padding: 32rpx;
+}
+
+.comment-input {
+  width: 100%;
+  height: 200rpx;
+  font-size: 28rpx;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8rpx;
+  padding: 20rpx;
+  box-sizing: border-box;
+  margin-bottom: 24rpx;
+}
+
+.comment-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16rpx;
+}
+
+.cancel-btn, .submit-btn {
+  font-size: 28rpx;
+  padding: 12rpx 32rpx;
+  border-radius: 32rpx;
+  border: none;
+}
+
+.cancel-btn {
+  color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.submit-btn {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.cancel-btn::after, .submit-btn::after {
+  border: none;
 }

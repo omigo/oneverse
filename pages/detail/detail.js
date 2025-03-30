@@ -3,56 +3,129 @@ Page({
         verse: null,
         comments: [],
         commentText: '',
-        replyTo: null
+        replyTo: null,
+        openid: ''
     },
 
     onLoad(options) {
+        // 获取用户openid
+        wx.cloud.callFunction({
+            name: 'getOpenId'
+        }).then(res => {
+            this.setData({ openid: res.result.openid });
+        }).catch(err => {
+            console.error('获取openid失败：', err);
+        });
+
         // 获取偈语详情
         const { _id } = options;
-        // 根据id从云数据库verses集合中查询对应偈语
-        wx.cloud.database().collection('verses').doc(_id).get({
-            success: res => {
-                const verse = {
-                    ...res.data,
-                    isLiked: false,
-                    isCollected: false
-                };
-                // 获取评论列表
-                // TODO: 从服务器获取评论列表
-                const comments = [
-                    {
-                        id: 1,
-                        username: '禅心',
-                        avatar: '/assets/icons/profile.png',
-                        content: '这句话说得很有道理，让人深思。',
-                        time: '2024-03-15 10:30',
-                        likes: 5,
-                        isLiked: false,
-                        replies: [
-                            {
-                                id: 11,
-                                username: '悟道',
-                                content: '确实如此，受益良多。'
-                            }
-                        ]
-                    },
-                    {
-                        id: 2,
-                        username: '修行者',
-                        avatar: '/assets/icons/profile.png',
-                        content: '感谢分享这么好的偈语。',
-                        time: '2024-03-15 09:15',
-                        likes: 3,
-                        isLiked: false
-                    }
-                ];
-
-                this.setData({ verse, comments });
-            },
-            fail: err => {
-                console.error('获取偈语详情失败', err);
-            }
+        const db = wx.cloud.database();
+        
+        // 获取偈语详情
+        db.collection('verses').doc(_id).get().then(res => {
+            const verse = {
+                ...res.data,
+                isLiked: false,
+                isCollected: false
+            };
+            this.setData({ verse });
+            
+            // 加载评论列表
+            this.loadComments();
+        }).catch(err => {
+            console.error('获取偈语详情失败', err);
+            wx.showToast({
+                title: '加载失败',
+                icon: 'none'
+            });
         });
+    },
+
+    // 加载评论列表
+    loadComments() {
+        const db = wx.cloud.database();
+        const _ = db.command;
+        
+        db.collection('comments')
+            .where({
+                verse_id: this.data.verse._id
+            })
+            .orderBy('createTime', 'desc')
+            .get()
+            .then(res => {
+                // 获取评论用户的信息
+                const userOpenids = [...new Set(res.data.map(comment => comment._openid))];
+                
+                // 获取用户信息
+                const userPromises = userOpenids.map(openid => 
+                    db.collection('users')
+                        .where({ _openid: openid })
+                        .get()
+                );
+
+                Promise.all(userPromises).then(userResults => {
+                    // 创建用户信息映射
+                    const userMap = {};
+                    userResults.forEach(result => {
+                        if (result.data.length > 0) {
+                            const user = result.data[0];
+                            userMap[user._openid] = {
+                                nickName: user.nickName,
+                                avatarUrl: user.avatarUrl
+                            };
+                        }
+                    });
+
+                    // 将用户信息添加到评论中
+                    const comments = res.data.map(comment => ({
+                        ...comment,
+                        username: userMap[comment._openid]?.nickName || '匿名用户',
+                        avatar: userMap[comment._openid]?.avatarUrl || '/assets/icons/profile.png',
+                        time: this.formatTime(comment.createTime)
+                    }));
+
+                    this.setData({ comments });
+                });
+            })
+            .catch(err => {
+                console.error('加载评论失败：', err);
+                wx.showToast({
+                    title: '加载评论失败',
+                    icon: 'none'
+                });
+            });
+    },
+
+    // 格式化时间
+    formatTime(date) {
+        if (typeof date === 'object') {
+            const now = new Date();
+            const diff = now - date;
+            
+            // 小于1分钟
+            if (diff < 60000) {
+                return '刚刚';
+            }
+            // 小于1小时
+            if (diff < 3600000) {
+                return Math.floor(diff / 60000) + '分钟前';
+            }
+            // 小于24小时
+            if (diff < 86400000) {
+                return Math.floor(diff / 3600000) + '小时前';
+            }
+            // 小于30天
+            if (diff < 2592000000) {
+                return Math.floor(diff / 86400000) + '天前';
+            }
+            
+            // 超过30天显示具体日期
+            const year = date.getFullYear();
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const day = date.getDate().toString().padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+        return date;
     },
 
     // 处理点赞
@@ -128,37 +201,56 @@ Page({
 
     // 提交评论
     submitComment() {
-        const { commentText, replyTo, comments } = this.data;
-        if (!commentText.trim()) return;
-
-        // TODO: 发送评论到服务器
-        const newComment = {
-            id: comments.length + 1,
-            username: '我',
-            avatar: '/assets/icons/profile.png',
-            content: commentText,
-            time: '刚刚',
-            likes: 0,
-            isLiked: false
-        };
-
-        if (replyTo) {
-            // 添加回复
-            replyTo.replies = replyTo.replies || [];
-            replyTo.replies.push({
-                id: replyTo.replies.length + 1,
-                username: '我',
-                content: commentText.replace(`回复 @${replyTo.username}：`, '')
+        const { commentText, replyTo, verse, openid } = this.data;
+        if (!commentText.trim()) {
+            wx.showToast({
+                title: '请输入评论内容',
+                icon: 'none'
             });
-        } else {
-            // 添加新评论
-            comments.unshift(newComment);
+            return;
         }
 
-        this.setData({
-            comments,
-            commentText: '',
-            replyTo: null
+        const db = wx.cloud.database();
+        
+        // 创建评论记录
+        db.collection('comments').add({
+            data: {
+                verse_id: verse._id,
+                content: commentText,
+                createTime: db.serverDate(),
+                likes: 0,
+                reply_to: replyTo ? {
+                    _openid: replyTo._openid,
+                    content: replyTo.content
+                } : null
+            }
+        }).then(() => {
+            // 更新偈语的评论数
+            return db.collection('verses').doc(verse._id).update({
+                data: {
+                    comments: db.command.inc(1)
+                }
+            });
+        }).then(() => {
+            wx.showToast({
+                title: '评论成功',
+                icon: 'success'
+            });
+
+            // 清空评论框
+            this.setData({
+                commentText: '',
+                replyTo: null
+            });
+
+            // 重新加载评论列表
+            this.loadComments();
+        }).catch(err => {
+            console.error('提交评论失败：', err);
+            wx.showToast({
+                title: '评论失败',
+                icon: 'none'
+            });
         });
     },
 
