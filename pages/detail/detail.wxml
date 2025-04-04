@@ -85,7 +85,7 @@
           </view>
         </view>
       </view>
-      <view class="no-comment" wx:if="{{!comments.length}}">
+      <view class="no-comment" wx:if="{{!commentList.length}}">
         <text>暂无评论，快来抢沙发吧~</text>
       </view>
     </scroll-view>
