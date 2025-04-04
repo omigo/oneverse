@@ -96,10 +96,10 @@ Page({
         });
     },
 
-    navigateToverse(e) {
+    navigateToVerse(e) {
         const { verse } = e.currentTarget.dataset;
         wx.navigateTo({
-            url: `/pages/detail/verse/verse?id=${verse.id}`
+            url: `/pages/detail/detail?_id=${verse._id}`
         });
     },
 

@@ -1,5 +1,4 @@
 .container {
-  min-height: 100vh;
   background: #000;
   padding-bottom: 40rpx;
 }
@@ -125,6 +124,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: 10rpx;
 }
 
 .source {

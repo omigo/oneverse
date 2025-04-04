@@ -31,6 +31,7 @@ Page({
                     hasUserInfo: true
                 });
             }
+            console.log(userInfo)
             // 加载收藏列表
             this.loadCollectionData();
         }
@@ -41,6 +42,7 @@ Page({
         wx.getUserProfile({
             desc: '用于完善用户资料',
             success: (res) => {
+                console.log(res)
                 const userInfo = res.userInfo;
                 wx.setStorageSync('userInfo', userInfo);
                 wx.setStorageSync('isLogin', true);
@@ -99,66 +101,9 @@ Page({
                 })
                 .get();
         }).then(res => {
-            if (res.data.length === 0) {
                 this.setData({
-                    verses: [],
+                    verses: res.data,
                     loading: false
-                });
-                return;
-            }
-
-            // 获取作者和出处信息
-            const authors = [...new Set(res.data.map(verse => verse.author))];
-            const sources = [...new Set(res.data.map(verse => verse.source))];
-            
-            const authorPromises = authors.map(author => 
-                db.collection('authors')
-                    .where({ name: author })
-                    .get()
-            );
-            
-            const sourcePromises = sources.map(source => 
-                db.collection('sources')
-                    .where({ name: source })
-                    .get()
-            );
-
-            return Promise.all([...authorPromises, ...sourcePromises])
-                .then(([...results]) => {
-                    // 创建作者和出处信息映射
-                    const authorMap = {};
-                    const sourceMap = {};
-                    
-                    results.forEach(result => {
-                        if (result.data.length > 0) {
-                            const item = result.data[0];
-                            if (item.name) {
-                                if (item.description) {
-                                    // 这是作者信息
-                                    authorMap[item.name] = {
-                                        description: item.description
-                                    };
-                                } else {
-                                    // 这是出处信息
-                                    sourceMap[item.name] = {
-                                        description: item.description
-                                    };
-                                }
-                            }
-                        }
-                    });
-
-                    // 将作者和出处信息添加到偈语中
-                    const verses = res.data.map(verse => ({
-                        ...verse,
-                        authorInfo: authorMap[verse.author] || {},
-                        sourceInfo: sourceMap[verse.source] || {}
-                    }));
-
-                    this.setData({
-                        verses,
-                        loading: false
-                    });
                 });
         }).catch(err => {
             console.error('加载收藏列表失败：', err);

@@ -3,7 +3,7 @@
     <!-- 出处信息 -->
     <view class="source-info">
       <view class="header">
-        <text class="source-name">{{source.name}}</text>
+        <text class="source-name">《{{source.name}}》</text>
         <text class="verse-count">{{source.verseCount || 0}}</text>
       </view>
       <view class="stats">
@@ -28,6 +28,7 @@
               data-verse="{{item}}">
           <text class="verse-text">{{item.verse}}</text>
           <view class="meta">
+            <text class="author" wx:if="{{item.source}}">《{{item.source}}》</text>
             <text class="author">{{item.author}}</text>
             <view class="stats">
               <view class="stat">

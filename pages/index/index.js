@@ -58,7 +58,11 @@ Page({
                 .sample({ size })
                 .end()
                 .then(res => {
-                    const verses = res.list;
+                    const verses = res.list.map(x => {
+                        x.collections = x.collections || 0;
+                        x.likes = x.likes || 0;
+                        return x
+                    });
                     
                     // 获取当前用户的点赞和收藏记录
                     return Promise.all([
@@ -190,6 +194,16 @@ Page({
                 }
             }).then(() => {
                 console.log('点赞成功');
+                // 更新偈语的点赞数
+                db.collection('verses').doc(verse._id).update({
+                    data: {
+                        likes: db.command.inc(1)
+                    }
+                }).then(() => {
+                    console.log('更新点赞数成功');
+                }).catch(err => {
+                    console.error('更新点赞数失败:', err);
+                });
             }).catch(err => {
                 console.error('点赞失败:', err);
                 // 如果保存失败，回滚点赞状态
@@ -203,6 +217,16 @@ Page({
                 verse_id: verse._id
             }).remove().then(() => {
                 console.log('取消点赞成功');
+                // 更新偈语的点赞数
+                db.collection('verses').doc(verse._id).update({
+                    data: {
+                        likes: db.command.inc(-1)
+                    }
+                }).then(() => {
+                    console.log('更新点赞数成功');
+                }).catch(err => {
+                    console.error('更新点赞数失败:', err);
+                });
             }).catch(err => {
                 console.error('取消点赞失败:', err);
                 // 如果删除失败，恢复点赞状态
@@ -219,6 +243,7 @@ Page({
         const { verses } = this.data;
         const verse = verses[index];
         verse.isCollected = !verse.isCollected;
+        verse.collections += verse.isCollected ? 1 : -1;
         this.setData({ verses });
         
         const db = wx.cloud.database();
@@ -232,6 +257,16 @@ Page({
                 }
             }).then(() => {
                 console.log('收藏成功');
+                // 更新偈语的收藏数
+                db.collection('verses').doc(verse._id).update({
+                    data: {
+                        collections: db.command.inc(1)
+                    }
+                }).then(() => {
+                    console.log('更新收藏数成功');
+                }).catch(err => {
+                    console.error('更新收藏数失败:', err);
+                });
             }).catch(err => {
                 console.error('收藏失败:', err);
                 // 如果保存失败，回滚收藏状态
@@ -244,6 +279,16 @@ Page({
                 verse_id: verse._id
             }).remove().then(() => {
                 console.log('取消收藏成功');
+                // 更新偈语的收藏数
+                db.collection('verses').doc(verse._id).update({
+                    data: {
+                        collections: db.command.inc(-1)
+                    }
+                }).then(() => {
+                    console.log('更新收藏数成功');
+                }).catch(err => {
+                    console.error('更新收藏数失败:', err);
+                });
             }).catch(err => {
                 console.error('取消收藏失败:', err);
                 // 如果删除失败，恢复收藏状态
@@ -308,6 +353,18 @@ Page({
         // 增加分享数
         verse.shares = (verse.shares || 0) + 1;
         this.setData({ verses });
+
+        // 更新偈语的分享数
+        const db = wx.cloud.database();
+        db.collection('verses').doc(verse._id).update({
+            data: {
+                shares: db.command.inc(1)
+            }
+        }).then(() => {
+            console.log('更新分享数成功');
+        }).catch(err => {
+            console.error('更新分享数失败:', err);
+        });
 
         return {
             title: verse.verse,

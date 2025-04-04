@@ -1,64 +1,52 @@
 <view class="container">
-  <form class="form1" bindsubmit="handleSubmit">
+  <form bindsubmit="onSubmit">
     <view class="form-group">
-      <view class="label">偈语内容</view>
+      <view class="label">偈语</view>
       <textarea class="input textarea" 
-                name="verse" 
+                name="verse"
                 placeholder="请输入偈语内容" 
-                value="{{formData.verse}}"
                 maxlength="200"
-                bindinput="handleverseInput"/>
+                bindinput="onVerseInput"
+                value="{{verse}}">
+      </textarea>
       <view class="word-count">{{verseLength}}/200</view>
     </view>
 
     <view class="form-group">
       <view class="label">作者</view>
       <input class="input" 
-             name="author" 
+             name="author"
              placeholder="请输入作者" 
-             value="{{formData.author}}"
-             bindinput="handleAuthorInput"/>
+             bindinput="onAuthorInput"
+             value="{{author}}"/>
     </view>
 
     <view class="form-group">
       <view class="label">出处</view>
       <input class="input" 
-             name="source" 
+             name="source"
              placeholder="请输入出处" 
-             value="{{formData.source}}"
-             bindinput="handleSourceInput"/>
+             bindinput="onSourceInput"
+             value="{{source}}"/>
     </view>
 
     <view class="form-group">
-      <view class="label">标签</view>
-      <view class="tags-input">
-        <view class="tag-item" wx:for="{{formData.tags}}" wx:key="index">
-          <text>{{item}}</text>
-          <text class="delete-tag" bindtap="deleteTag" data-index="{{index}}">×</text>
-        </view>
-        <input class="tag-input" 
-               placeholder="{{formData.tags.length ? '' : '请输入标签，回车确认'}}"
-               value="{{tagInput}}"
-               bindconfirm="addTag"
-               bindinput="handleTagInput"/>
-      </view>
+      <text class="label">标签</text>
+      <input class="input" placeholder="输入标签，按空格分隔" value="{{tagInput}}" bindinput="onTagInput" />
     </view>
 
     <view class="form-group">
       <view class="label">解释</view>
       <textarea class="input textarea" 
-                name="explanation" 
+                name="explanation"
                 placeholder="请输入解释内容" 
-                value="{{formData.explanation}}"
                 maxlength="500"
-                bindinput="handleExplanationInput"/>
+                bindinput="onExplanationInput"
+                value="{{formData.explanation}}">
+      </textarea>
       <view class="word-count">{{explanationLength}}/500</view>
     </view>
 
-    <button class="submit-btn" 
-            form-type="submit" 
-            disabled="{{!formData.verse || !formData.author}}">
-      发布
-    </button>
+    <button class="submit-btn" disabled="{{!formData.verse || !formData.author}}" bindtap="onSubmit">发布</button>
   </form>
 </view>

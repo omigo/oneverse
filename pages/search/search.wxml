@@ -4,6 +4,7 @@
       <image class="search-icon" src="/assets/icons/search.png"></image>
       <input class="search-input" 
              placeholder="搜索偈语、作者、出处、标签" 
+             placeholder-style="color: rgba(255, 255, 255, 0.5)"
              value="{{searchText}}"
              bindinput="onSearchInput"
              bindconfirm="onSearch"/>
@@ -21,7 +22,7 @@
     <view class="tab-item {{currentTab === 'sources' ? 'active' : ''}}" 
           bindtap="switchTab" 
           data-tab="sources">
-      <text>出处</text>
+      <text>《出处》</text>
       <text class="count" wx:if="{{results.sources.length}}">{{results.sources.length}}</text>
     </view>
     <view class="tab-item {{currentTab === 'authors' ? 'active' : ''}}" 
@@ -41,108 +42,135 @@
   <scroll-view class="results" scroll-y="true">
     <!-- 偈语搜索结果 -->
     <view class="verses-list" wx:if="{{currentTab === 'verses'}}">
-      <view class="verse-item"
-            wx:for="{{results.verses}}"
-            wx:key="index"
-            bindtap="navigateToVerse"
-            data-verse="{{item}}">
-        <text class="verse-text">{{item.verse}}</text>
-        <view class="meta">
-          <text class="source" wx:if="{{item.source}}">《{{item.source}}》</text>
-          <text class="author">{{item.author}}</text>
-          <view class="stats">
-            <view class="stat">
-              <image class="icon" src="/assets/icons/like.png"></image>
-              <text>{{item.likes || 0}}</text>
+      <block wx:if="{{results.verses && results.verses.length > 0}}">
+        <view class="verse-item"
+              wx:for="{{results.verses}}"
+              wx:key="index"
+              bindtap="navigateToVerse"
+              data-verse="{{item}}">
+          <text class="verse-text">{{item.verse}}</text>
+          <view class="meta">
+            <view class="meta-row">
+              <text class="source" wx:if="{{item.source}}">《{{item.source}}》</text>
+              <text class="author">{{item.author}}</text>
             </view>
-            <view class="stat">
-              <image class="icon" src="/assets/icons/comment.png"></image>
-              <text>{{item.comments || 0}}</text>
+            <view class="stats">
+              <view class="stat">
+                <image class="icon" src="/assets/icons/like.png"></image>
+                <text>{{item.likes || 0}}</text>
+              </view>
+              <view class="stat">
+                <image class="icon" src="/assets/icons/comment.png"></image>
+                <text>{{item.comments || 0}}</text>
+              </view>
             </view>
           </view>
         </view>
+      </block>
+      <view class="empty-state" wx:else>
+        <image class="empty-icon" src="/assets/icons/no-result.png"></image>
+        <text class="empty-text">暂无偈语</text>
       </view>
     </view>
 
     <!-- 作者搜索结果 -->
     <view class="authors-list" wx:if="{{currentTab === 'authors'}}">
-      <view class="verse-item" 
-            wx:for="{{results.authors}}" 
-            wx:key="index"
-            bindtap="navigateToAuthor"
-            data-verse="{{item}}">
-        <text class="verse-text">{{item.verse}}</text>
-        <view class="meta">
-          <text class="source" wx:if="{{item.source}}">《{{item.source}}》</text>
-          <text class="author">{{item.author}}</text>
-          <view class="stats">
-            <view class="stat">
-              <image class="icon" src="/assets/icons/like.png"></image>
-              <text>{{item.likes || 0}}</text>
+      <block wx:if="{{results.authors && results.authors.length > 0}}">
+        <view class="verse-item" 
+              wx:for="{{results.authors}}" 
+              wx:key="index"
+              bindtap="navigateToAuthor"
+              data-verse="{{item}}">
+          <text class="verse-text">{{item.verse}}</text>
+          <view class="meta">
+            <view class="meta-row">
+              <text class="source" wx:if="{{item.source}}">《{{item.source}}》</text>
+              <text class="author">{{item.author}}</text>
             </view>
-            <view class="stat">
-              <image class="icon" src="/assets/icons/comment.png"></image>
-              <text>{{item.comments || 0}}</text>
+            <view class="stats">
+              <view class="stat">
+                <image class="icon" src="/assets/icons/like.png"></image>
+                <text>{{item.likes || 0}}</text>
+              </view>
+              <view class="stat">
+                <image class="icon" src="/assets/icons/comment.png"></image>
+                <text>{{item.comments || 0}}</text>
+              </view>
             </view>
           </view>
         </view>
+      </block>
+      <view class="empty-state" wx:else>
+        <image class="empty-icon" src="/assets/icons/no-result.png"></image>
+        <text class="empty-text">暂无作者</text>
       </view>
     </view>
 
     <!-- 出处搜索结果 -->
     <view class="sources-list" wx:if="{{currentTab === 'sources'}}">
-      <view class="verse-item" 
-            wx:for="{{results.sources}}" 
-            wx:key="index"
-            bindtap="navigateToSource"
-            data-verse="{{item}}">
-        <text class="verse-text">{{item.verse}}</text>
-        <view class="meta">
-          <text class="source" wx:if="{{item.source}}">《{{item.source}}》</text>
-          <text class="author">{{item.author}}</text>
-          <view class="stats">
-            <view class="stat">
-              <image class="icon" src="/assets/icons/like.png"></image>
-              <text>{{item.likes || 0}}</text>
+      <block wx:if="{{results.sources && results.sources.length > 0}}">
+        <view class="verse-item" 
+              wx:for="{{results.sources}}" 
+              wx:key="index"
+              bindtap="navigateToSource"
+              data-verse="{{item}}">
+          <text class="verse-text">{{item.verse}}</text>
+          <view class="meta">
+            <view class="meta-row">
+              <text class="source" wx:if="{{item.source}}">《{{item.source}}》</text>
+              <text class="author">{{item.author}}</text>
             </view>
-            <view class="stat">
-              <image class="icon" src="/assets/icons/comment.png"></image>
-              <text>{{item.comments || 0}}</text>
+            <view class="stats">
+              <view class="stat">
+                <image class="icon" src="/assets/icons/like.png"></image>
+                <text>{{item.likes || 0}}</text>
+              </view>
+              <view class="stat">
+                <image class="icon" src="/assets/icons/comment.png"></image>
+                <text>{{item.comments || 0}}</text>
+              </view>
             </view>
           </view>
         </view>
+      </block>
+      <view class="empty-state" wx:else>
+        <image class="empty-icon" src="/assets/icons/no-result.png"></image>
+        <text class="empty-text">暂无出处</text>
       </view>
     </view>
 
     <!-- 标签搜索结果 -->
     <view class="tags-list" wx:if="{{currentTab === 'tags'}}">
-      <view class="verse-item" 
-            wx:for="{{results.tags}}" 
-            wx:key="index"
-            bindtap="navigateToTag"
-            data-verse="{{item}}">
-        <text class="verse-text">{{item.verse}}</text>
-        <view class="meta">
-          <text class="source" wx:if="{{item.source}}">《{{item.source}}》</text>
-          <text class="author">{{item.author}}</text>
-          <view class="stats">
-            <view class="stat">
-              <image class="icon" src="/assets/icons/like.png"></image>
-              <text>{{item.likes || 0}}</text>
+      <block wx:if="{{results.tags && results.tags.length > 0}}">
+        <view class="verse-item" 
+              wx:for="{{results.tags}}" 
+              wx:key="index"
+              bindtap="navigateToTag"
+              data-verse="{{item}}">
+          <text class="verse-text">{{item.verse}}</text>
+          <view class="meta">
+            <view class="meta-row">
+              <text class="source" wx:if="{{item.source}}">《{{item.source}}》</text>
+              <text class="author">{{item.author}}</text>
             </view>
-            <view class="stat">
-              <image class="icon" src="/assets/icons/comment.png"></image>
-              <text>{{item.comments || 0}}</text>
+            <view class="stats">
+              <view class="stat">
+                <image class="icon" src="/assets/icons/like.png"></image>
+                <text>{{item.likes || 0}}</text>
+              </view>
+              <view class="stat">
+                <image class="icon" src="/assets/icons/comment.png"></image>
+                <text>{{item.comments || 0}}</text>
+              </view>
             </view>
           </view>
         </view>
+      </block>
+      <view class="empty-state" wx:else>
+        <image class="empty-icon" src="/assets/icons/no-result.png"></image>
+        <text class="empty-text">暂无标签</text>
       </view>
     </view>
 
-    <!-- 无搜索结果 -->
-    <view class="no-result" wx:if="{{searched && !hasResults}}">
-      <image class="no-result-icon" src="/assets/icons/no-result.png"></image>
-      <text>暂无搜索结果</text>
-    </view>
   </scroll-view>
 </view>

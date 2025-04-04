@@ -24,7 +24,8 @@
         <view class="verse-item" wx:for="{{verses}}" wx:key="_id" bindtap="navigateToverse" data-verse="{{item}}">
           <text class="verse-text">{{item.verse}}</text>
           <view class="meta">
-            <text class="source">{{item.source}}</text>
+            <text class="source" wx:if="{{item.source}}">《{{item.source}}》</text>
+            <text class="source">{{item.author}}</text>
             <view class="stats">
               <view class="stat">
                 <image class="icon" src="/assets/icons/{{item.isLiked ? 'like-active' : 'like'}}.png"></image>

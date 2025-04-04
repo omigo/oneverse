@@ -1,208 +1,327 @@
+const app = getApp()
+
 Page({
     data: {
         verse: null,
-        comments: [],
+        isLoading: true,
         commentText: '',
-        replyTo: null,
-        openid: ''
+        userInfo: null,
+        isLoggedIn: false,
+        openid: null,
+        replyTo: null,  // 当前回复的评论ID
+        replyToUser: null,  // 被回复的用户名
+        replyText: '',  // 回复内容
+        showReplyInput: false,  // 是否显示回复输入框
+        commentList: []
     },
 
     onLoad(options) {
-        // 获取用户openid
-        wx.cloud.callFunction({
-            name: 'getOpenId'
-        }).then(res => {
-            this.setData({ openid: res.result.openid });
-        }).catch(err => {
-            console.error('获取openid失败：', err);
-        });
+        this.getOpenId();
+        this.checkLoginStatus();
+        if (options._id) {
+            this.loadVerseDetail(options._id);
+        }
+    },
 
-        // 获取偈语详情
-        const { _id } = options;
+    onShow() {
+        // 每次显示页面时检查登录状态
+        this.checkLoginStatus();
+    },
+
+    checkLoginStatus() {
+        const userInfo = wx.getStorageSync('userInfo')
+        if (userInfo) {
+            this.setData({
+                userInfo,
+                isLoggedIn: true
+            })
+        }
+    },
+
+    getUserProfile() {
+        wx.getUserProfile({
+            desc: '用于完善用户资料',
+            success: (res) => {
+                const userInfo = res.userInfo
+                wx.setStorageSync('userInfo', userInfo)
+                this.setData({
+                    userInfo,
+                    isLoggedIn: true
+                })
+            },
+            fail: (err) => {
+                console.log('用户拒绝授权', err)
+                wx.showToast({
+                    title: '需要授权才能互动',
+                    icon: 'none'
+                })
+            }
+        })
+    },
+
+    loadVerseDetail(_id) {
         const db = wx.cloud.database();
-        
-        // 获取偈语详情
-        db.collection('verses').doc(_id).get().then(res => {
-            const verse = {
-                ...res.data,
-                isLiked: false,
-                isCollected: false
-            };
-            this.setData({ verse });
-            
-            // 加载评论列表
-            this.loadComments();
-        }).catch(err => {
-            console.error('获取偈语详情失败', err);
-            wx.showToast({
-                title: '加载失败',
-                icon: 'none'
-            });
+        db.collection('verses').doc(_id).get({
+            success: res => {
+                const verse = res.data;
+                this.setData({
+                        verse: verse
+                    });
+                // 检查是否已点赞和收藏
+                Promise.all([
+                    db.collection('likes').where({
+                        verse_id: _id
+                    }).get(),
+                    db.collection('collections').where({
+                        verse_id: _id
+                    }).get()
+                ]).then(([likeRes, collectRes]) => {
+                    this.setData({
+                        verse: {
+                            ...verse,
+                            isLiked: likeRes.data.length > 0,
+                            isCollected: collectRes.data.length > 0
+                        },
+                        isLoading: false
+                    });
+                    this.loadComments(_id);
+                });
+            },
+            fail: err => {
+                console.error('获取偈语详情失败：', err);
+                wx.showToast({
+                    title: '获取详情失败',
+                    icon: 'none'
+                });
+            }
         });
     },
 
-    // 加载评论列表
-    loadComments() {
+    loadComments(verseId) {
         const db = wx.cloud.database();
-        const _ = db.command;
-        
         db.collection('comments')
             .where({
-                verse_id: this.data.verse._id
+                verse_id: verseId
             })
-            .orderBy('createTime', 'desc')
-            .get()
-            .then(res => {
-                // 获取评论用户的信息
-                const userOpenids = [...new Set(res.data.map(comment => comment._openid))];
-                
-                // 获取用户信息
-                const userPromises = userOpenids.map(openid => 
-                    db.collection('users')
-                        .where({ _openid: openid })
-                        .get()
-                );
-
-                Promise.all(userPromises).then(userResults => {
-                    // 创建用户信息映射
-                    const userMap = {};
-                    userResults.forEach(result => {
-                        if (result.data.length > 0) {
-                            const user = result.data[0];
-                            userMap[user._openid] = {
-                                nickName: user.nickName,
-                                avatarUrl: user.avatarUrl
-                            };
-                        }
-                    });
-
-                    // 将用户信息添加到评论中
-                    const comments = res.data.map(comment => ({
+            .orderBy('create_time', 'desc')
+            .get({
+                success: res => {
+                    // 格式化时间
+                    const formattedComments = res.data.map(comment => ({
                         ...comment,
-                        username: userMap[comment._openid]?.nickName || '匿名用户',
-                        avatar: userMap[comment._openid]?.avatarUrl || '/assets/icons/profile.png',
-                        time: this.formatTime(comment.createTime)
+                        create_time: this.formatTime(comment.create_time)
                     }));
-
-                    this.setData({ comments });
-                });
-            })
-            .catch(err => {
-                console.error('加载评论失败：', err);
-                wx.showToast({
-                    title: '加载评论失败',
-                    icon: 'none'
-                });
+                    this.setData({
+                        commentList: formattedComments
+                    });
+                }
             });
     },
 
     // 格式化时间
     formatTime(date) {
-        if (typeof date === 'object') {
-            const now = new Date();
-            const diff = now - date;
-            
-            // 小于1分钟
-            if (diff < 60000) {
-                return '刚刚';
-            }
-            // 小于1小时
-            if (diff < 3600000) {
-                return Math.floor(diff / 60000) + '分钟前';
-            }
-            // 小于24小时
-            if (diff < 86400000) {
-                return Math.floor(diff / 3600000) + '小时前';
-            }
-            // 小于30天
-            if (diff < 2592000000) {
-                return Math.floor(diff / 86400000) + '天前';
-            }
-            
-            // 超过30天显示具体日期
-            const year = date.getFullYear();
-            const month = (date.getMonth() + 1).toString().padStart(2, '0');
-            const day = date.getDate().toString().padStart(2, '0');
-            return `${year}-${month}-${day}`;
-        }
-        return date;
+        date = new Date(date);
+        const year = date.getFullYear();
+        const month = date.getMonth() + 1;
+        const day = date.getDate();
+        const hour = date.getHours();
+        const minute = date.getMinutes();
+        
+        return `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')} ${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
     },
 
-    // 处理点赞
     handleLike() {
-        const { verse } = this.data;
-        verse.isLiked = !verse.isLiked;
-        verse.likes += verse.isLiked ? 1 : -1;
-        this.setData({ verse });
-    },
-
-    // 处理收藏
-    handleCollect() {
-        const { verse } = this.data;
-        verse.isCollected = !verse.isCollected;
-        this.setData({ verse });
-    },
-
-    // 导航到作者详情
-    navigateToAuthor(e) {
-        const { author } = e.currentTarget.dataset;
-        wx.navigateTo({
-            url: `/pages/detail/author/author?name=${author}`
-        });
-    },
-
-    // 导航到出处详情
-    navigateToSource(e) {
-        const { source } = e.currentTarget.dataset;
-        wx.navigateTo({
-            url: `/pages/detail/source/source?name=${source}`
-        });
-    },
-
-    // 导航到标签详情
-    navigateToTag(e) {
-        const { tag } = e.currentTarget.dataset;
-        wx.navigateTo({
-            url: `/pages/detail/tag/tag?name=${tag}`
-        });
-    },
-
-    // 点赞评论
-    likeComment(e) {
-        const { id } = e.currentTarget.dataset;
-        const { comments } = this.data;
-        const comment = comments.find(c => c.id === id);
-        if (comment) {
-            comment.isLiked = !comment.isLiked;
-            comment.likes += comment.isLiked ? 1 : -1;
-            this.setData({ comments });
+        if (!this.data.isLoggedIn) {
+            wx.showModal({
+                title: '提示',
+                content: '点赞需要授权登录',
+                confirmText: '去登录',
+                cancelText: '取消',
+                success: (res) => {
+                    if (res.confirm) {
+                        this.getUserProfile();
+                    }
+                }
+            });
+            return;
         }
-    },
 
-    // 回复评论
-    replyComment(e) {
-        const { id } = e.currentTarget.dataset;
-        const { comments } = this.data;
-        const comment = comments.find(c => c.id === id);
-        if (comment) {
+        const db = wx.cloud.database();
+        const _ = db.command;
+        const verse = this.data.verse;
+
+        // 检查是否已点赞
+        if (verse.isLiked) {
+            // 已点赞，先更新界面
             this.setData({
-                replyTo: comment,
-                commentText: `回复 @${comment.username}：`
+                'verse.likes': (verse.likes || 1) - 1,
+                'verse.isLiked': false
+            });
+
+            // 更新数据库
+            db.collection('likes').where({
+                verse_id: verse._id
+            }).get().then(res => {
+                if (res.data.length > 0) {
+                    return db.collection('likes').doc(res.data[0]._id).remove();
+                }
+            }).then(() => {
+                return db.collection('verses').doc(verse._id).update({
+                    data: {
+                        likes: _.inc(-1)
+                    }
+                });
+            }).catch(err => {
+                console.error('取消点赞失败：', err);
+                // 恢复界面状态
+                this.setData({
+                    'verse.likes': verse.likes,
+                    'verse.isLiked': true
+                });
+            });
+        } else {
+            // 未点赞，先更新界面
+            this.setData({
+                'verse.likes': (verse.likes || 0) + 1,
+                'verse.isLiked': true
+            });
+
+            // 更新数据库
+            db.collection('likes').add({
+                data: {
+                    verse_id: verse._id,
+                    create_time: db.serverDate()
+                }
+            }).then(() => {
+                return db.collection('verses').doc(verse._id).update({
+                    data: {
+                        likes: _.inc(1)
+                    }
+                });
+            }).catch(err => {
+                console.error('点赞失败：', err);
+                // 恢复界面状态
+                this.setData({
+                    'verse.likes': verse.likes,
+                    'verse.isLiked': false
+                });
             });
         }
     },
 
-    // 评论输入
-    onCommentInput(e) {
+    handleCollect() {
+        if (!this.data.isLoggedIn) {
+            wx.showModal({
+                title: '提示',
+                content: '收藏需要授权登录',
+                confirmText: '去登录',
+                cancelText: '取消',
+                success: (res) => {
+                    if (res.confirm) {
+                        this.getUserProfile();
+                    }
+                }
+            });
+            return;
+        }
+
+        const db = wx.cloud.database();
+        const _ = db.command;
+        const verse = this.data.verse;
+
+        // 检查是否已收藏
+        if (verse.isCollected) {
+            // 已收藏，先更新界面
+            this.setData({
+                'verse.collections': (verse.collections || 1) - 1,
+                'verse.isCollected': false
+            });
+
+            // 更新数据库
+            db.collection('collections').where({
+                verse_id: verse._id
+            }).get().then(res => {
+                if (res.data.length > 0) {
+                    return db.collection('collections').doc(res.data[0]._id).remove();
+                }
+            }).then(() => {
+                return db.collection('verses').doc(verse._id).update({
+                    data: {
+                        collections: _.inc(-1)
+                    }
+                });
+            }).then(() => {
+                wx.showToast({
+                    title: '已取消收藏',
+                    icon: 'success'
+                });
+            }).catch(err => {
+                console.error('取消收藏失败：', err);
+                // 恢复界面状态
+                this.setData({
+                    'verse.collections': verse.collections,
+                    'verse.isCollected': true
+                });
+            });
+        } else {
+            // 未收藏，先更新界面
+            this.setData({
+                'verse.collections': (verse.collections || 0) + 1,
+                'verse.isCollected': true
+            });
+
+            // 更新数据库
+            db.collection('collections').add({
+                data: {
+                    verse_id: verse._id,
+                    create_time: db.serverDate()
+                }
+            }).then(() => {
+                return db.collection('verses').doc(verse._id).update({
+                    data: {
+                        collections: _.inc(1)
+                    }
+                });
+            }).then(() => {
+                wx.showToast({
+                    title: '收藏成功',
+                    icon: 'success'
+                });
+            }).catch(err => {
+                console.error('收藏失败：', err);
+                // 恢复界面状态
+                this.setData({
+                    'verse.collections': verse.collections,
+                    'verse.isCollected': false
+                });
+            });
+        }
+    },
+
+    handleCommentInput(e) {
         this.setData({
             commentText: e.detail.value
         });
     },
 
-    // 提交评论
     submitComment() {
-        const { commentText, replyTo, verse, openid } = this.data;
-        if (!commentText.trim()) {
+        if (!this.data.isLoggedIn) {
+            wx.showModal({
+                title: '提示',
+                content: '评论需要授权登录',
+                confirmText: '去登录',
+                cancelText: '取消',
+                success: (res) => {
+                    if (res.confirm) {
+                        this.getUserProfile();
+                    }
+                }
+            });
+            return;
+        }
+
+        const commentText = this.data.commentText.trim();
+        if (!commentText) {
             wx.showToast({
                 title: '请输入评论内容',
                 icon: 'none'
@@ -211,58 +330,219 @@ Page({
         }
 
         const db = wx.cloud.database();
-        
-        // 创建评论记录
+        const verse = this.data.verse;
+
         db.collection('comments').add({
             data: {
                 verse_id: verse._id,
                 content: commentText,
-                createTime: db.serverDate(),
-                likes: 0,
-                reply_to: replyTo ? {
-                    _openid: replyTo._openid,
-                    content: replyTo.content
-                } : null
+                create_time: db.serverDate(),
+                nick_name: this.data.userInfo.nickName,
+                avatar_url: this.data.userInfo.avatarUrl
+            },
+            success: () => {
+                wx.showToast({
+                    title: '评论成功',
+                    icon: 'success'
+                });
+                this.setData({
+                    commentText: ''
+                });
+                // 重新加载评论
+                this.loadComments(verse._id);
+            },
+            fail: err => {
+                console.error('评论失败：', err);
+                wx.showToast({
+                    title: '评论失败，请重试',
+                    icon: 'none'
+                });
             }
-        }).then(() => {
-            // 更新偈语的评论数
-            return db.collection('verses').doc(verse._id).update({
-                data: {
-                    comments: db.command.inc(1)
-                }
-            });
-        }).then(() => {
-            wx.showToast({
-                title: '评论成功',
-                icon: 'success'
-            });
+        });
+    },
 
-            // 清空评论框
-            this.setData({
-                commentText: '',
-                replyTo: null
-            });
-
-            // 重新加载评论列表
-            this.loadComments();
-        }).catch(err => {
-            console.error('提交评论失败：', err);
-            wx.showToast({
-                title: '评论失败',
-                icon: 'none'
+    // 获取用户openid
+    getOpenId() {
+        return new Promise((resolve, reject) => {
+            wx.cloud.callFunction({
+                name: 'getOpenId'
+            }).then(res => {
+                console.log('获取openid成功：', res.result.openid);
+                this.setData({
+                    openid: res.result.openid
+                });
+                resolve(res.result.openid);
+            }).catch(err => {
+                console.error('获取openid失败：', err);
+                reject(err);
             });
         });
     },
 
     onShareAppMessage() {
-        const { verse } = this.data;
-        // Increment share count
-        verse.shares = (verse.shares || 0) + 1;
-        this.setData({ verse });
-
         return {
-            title: verse.verse,
-            path: `/pages/detail/detail?_id=${verse._id}`
-        };
+            title: this.data.verse.verse,
+            path: '/pages/detail/detail?_id=' + this.data.verse._id
+        }
+    },
+
+    replyComment(e) {
+        if (!this.data.isLoggedIn) {
+            wx.showModal({
+                title: '提示',
+                content: '回复需要授权登录',
+                confirmText: '去登录',
+                cancelText: '取消',
+                success: (res) => {
+                    if (res.confirm) {
+                        this.getUserProfile();
+                    }
+                }
+            });
+            return;
+        }
+
+        console.log(e.currentTarget.dataset, this.data.commentList);
+        const commentId = e.currentTarget.dataset.id;
+        const comment = this.data.commentList.find(item => item._id === commentId);
+        this.setData({
+            replyTo: commentId,
+            replyToUser: comment.nick_name,
+            showReplyInput: true,
+            replyText: ''
+        });
+    },
+
+    handleReplyInput(e) {
+        this.setData({
+            replyText: e.detail.value
+        });
+    },
+
+    submitReply() {
+        const replyText = this.data.replyText.trim();
+        if (!replyText) {
+            wx.showToast({
+                title: '请输入回复内容',
+                icon: 'none'
+            });
+            return;
+        }
+
+        const db = wx.cloud.database();
+        const verse = this.data.verse;
+
+        db.collection('comments').add({
+            data: {
+                verse_id: verse._id,
+                content: `回复 ${this.data.replyToUser}：${replyText}`,
+                create_time: db.serverDate(),
+                nick_name: this.data.userInfo.nickName,
+                avatar_url: this.data.userInfo.avatarUrl,
+                parent_id: this.data.replyTo,
+                is_reply: true
+            },
+            success: () => {
+                wx.showToast({
+                    title: '回复成功',
+                    icon: 'success'
+                });
+                this.setData({
+                    replyText: '',
+                    replyTo: null,
+                    replyToUser: null,
+                    showReplyInput: false
+                });
+                // 重新加载评论
+                this.loadComments(verse._id);
+            },
+            fail: err => {
+                console.error('回复失败：', err);
+                wx.showToast({
+                    title: '回复失败，请重试',
+                    icon: 'none'
+                });
+            }
+        });
+    },
+
+    cancelReply() {
+        this.setData({
+            replyTo: null,
+            replyToUser: null,
+            showReplyInput: false,
+            replyText: ''
+        });
+    },
+
+    likeComment(e) {
+        if (!this.data.isLoggedIn) {
+            wx.showModal({
+                title: '提示',
+                content: '点赞需要授权登录',
+                confirmText: '去登录',
+                cancelText: '取消',
+                success: (res) => {
+                    if (res.confirm) {
+                        this.getUserProfile();
+                    }
+                }
+            });
+            return;
+        }
+
+        const commentId = e.currentTarget.dataset.id;
+        const db = wx.cloud.database();
+        const _ = db.command;
+
+        // 找到当前评论
+        const comment = this.data.commentList.find(item => item._id === commentId);
+        if (!comment) {
+            console.error('找不到对应的评论:', commentId);
+            return;
+        }
+
+        // 检查是否已点赞
+        if (comment.isLiked) {
+            // 已点赞，取消点赞
+            this.setData({
+                [`commentList[${this.data.commentList.indexOf(comment)}].likes`]: (comment.likes || 1) - 1,
+                [`commentList[${this.data.commentList.indexOf(comment)}].isLiked`]: false
+            });
+
+            // 更新数据库
+            db.collection('comments').doc(commentId).update({
+                data: {
+                    likes: _.inc(-1)
+                }
+            }).catch(err => {
+                console.error('取消点赞失败：', err);
+                // 恢复界面状态
+                this.setData({
+                    [`commentList[${this.data.commentList.indexOf(comment)}].likes`]: comment.likes,
+                    [`commentList[${this.data.commentList.indexOf(comment)}].isLiked`]: true
+                });
+            });
+        } else {
+            // 未点赞，添加点赞
+            this.setData({
+                [`commentList[${this.data.commentList.indexOf(comment)}].likes`]: (comment.likes || 0) + 1,
+                [`commentList[${this.data.commentList.indexOf(comment)}].isLiked`]: true
+            });
+
+            // 更新数据库
+            db.collection('comments').doc(commentId).update({
+                data: {
+                    likes: _.inc(1)
+                }
+            }).catch(err => {
+                console.error('点赞失败：', err);
+                // 恢复界面状态
+                this.setData({
+                    [`commentList[${this.data.commentList.indexOf(comment)}].likes`]: comment.likes,
+                    [`commentList[${this.data.commentList.indexOf(comment)}].isLiked`]: false
+                });
+            });
+        }
     }
 });

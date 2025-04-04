@@ -14,8 +14,8 @@
   </view>
 
   <!-- 收藏列表 -->
-  <view class="collection-list">
-    <view class="title">我的收藏</view>
+  <view class="verses-section">
+    <view class="section-title">我的收藏</view>
     <block wx:if="{{loading}}">
       <view class="loading">加载中...</view>
     </block>
@@ -23,22 +23,28 @@
       <view class="empty">暂无收藏</view>
     </block>
     <block wx:else>
-      <view class="verse-list">
-        <view class="verse-item" wx:for="{{verses}}" wx:key="_id">
-          <view class="verse-content" bindtap="navigateToDetail" data-id="{{item._id}}">
-            <text class="text">{{item.verse}}</text>
-            <view class="info">
-              <text class="author" wx:if="{{item.author}}" bindtap="navigateToAuthor" data-author="{{item.author}}">{{item.author}}</text>
-              <text class="source" wx:if="{{item.source}}" bindtap="navigateToSource" data-source="{{item.source}}">{{item.source}}</text>
-            </view>
-          </view>
-          <view class="actions">
+      <view class="verses-list">
+        <view class="verse-item" 
+              wx:for="{{verses}}" 
+              wx:key="_id"
+              bindtap="navigateToDetail"
+              data-id="{{item._id}}">
+          <text class="verse-text">{{item.verse}}</text>
+          <view class="meta">
+            <text class="author" wx:if="{{item.author}}" catchtap="navigateToAuthor" data-author="{{item.author}}">{{item.author}}</text>
+            <text class="source" wx:if="{{item.source}}" catchtap="navigateToSource" data-source="{{item.source}}">{{item.source}}</text>
             <view class="stats">
-              <text class="likes">{{item.likes || 0}} 赞</text>
-              <text class="comments">{{item.comments || 0}} 评论</text>
-            </view>
-            <view class="uncollect" bindtap="handleUncollect" data-id="{{item._id}}">
-              <image class="icon" src="/assets/icons/star-filled.png" mode="aspectFit"></image>
+              <view class="stat">
+                <image class="icon" src="/assets/icons/like.png"></image>
+                <text>{{item.likes || 0}}</text>
+              </view>
+              <view class="stat">
+                <image class="icon" src="/assets/icons/comment.png"></image>
+                <text>{{item.comments || 0}}</text>
+              </view>
+              <view class="stat" catchtap="handleUncollect" data-id="{{item._id}}">
+                <image class="icon" src="/assets/icons/star-filled.png"></image>
+              </view>
             </view>
           </view>
         </view>

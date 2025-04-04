@@ -8,7 +8,7 @@
           <text class="value">{{verse.author}}</text>
         </view>
         <view class="source" bindtap="navigateToSource" data-source="{{verse.source}}" wx:if="{{verse.source}}">
-          <text class="value">{{verse.source}}</text>
+          <text class="value">《{{verse.source}}》</text>
         </view>
       </view>
       <view class="tags" wx:if="{{verse.tags && verse.tags.length > 0}}">
@@ -31,16 +31,16 @@
           <text class="count">{{verse.likes || 0}}</text>
         </view>
       </view>
-      <view class="action-item" bindtap="handleComment">
-        <view class="icon-count">
-          <image class="icon" src="/assets/icons/comment.png"></image>
-          <text class="count">{{verse.comments || 0}}</text>
-        </view>
-      </view>
       <view class="action-item" bindtap="handleCollect">
         <view class="icon-count">
           <image class="icon" src="/assets/icons/{{verse.isCollected ? 'collect-active' : 'collect'}}.png"></image>
           <text class="count">{{verse.collections || 0}}</text>
+        </view>
+      </view>
+      <view class="action-item" >
+        <view class="icon-count">
+          <image class="icon" src="/assets/icons/comment.png"></image>
+          <text class="count">{{verse.comments || 0}}</text>
         </view>
       </view>
       <view class="action-item">
@@ -58,20 +58,20 @@
   <view class="comments-section">
     <!-- 评论列表 -->
     <scroll-view class="comments-list" scroll-y="true">
-      <view class="comment-item" wx:for="{{comments}}" wx:key="id">
+      <view class="comment-item" wx:for="{{commentList}}" wx:key="id">
         <image class="avatar" src="{{item.avatar || '/assets/icons/profile.png'}}"></image>
         <view class="comment-content">
           <view class="comment-header">
-            <text class="username">{{item.username||'心心'}}</text>
-            <text class="time">{{item.time}}</text>
+            <text class="username">{{item.nick_name}}</text>
+            <text class="time">{{item.create_time}}</text>
           </view>
           <text class="comment-text">{{item.content}}</text>
           <view class="comment-actions">
-            <view class="action" bindtap="likeComment" data-id="{{item.id}}">
+            <view class="action" bindtap="likeComment" data-id="{{item._id}}">
               <image class="icon-small" src="/assets/icons/{{item.isLiked ? 'like-active' : 'like'}}.png"></image>
               <text>{{item.likes || 0}}</text>
             </view>
-            <view class="action" bindtap="replyComment" data-id="{{item.id}}">
+            <view class="action" bindtap="replyComment" data-id="{{item._id}}">
               <image class="icon-small" src="/assets/icons/comment.png"></image>
               <text>回复</text>
             </view>
@@ -79,7 +79,7 @@
           <!-- 回复列表 -->
           <view class="replies" wx:if="{{item.replies && item.replies.length > 0}}">
             <view class="reply-item" wx:for="{{item.replies}}" wx:key="id" wx:for-item="reply">
-              <text class="username">{{reply.username}}</text>
+              <text class="username">{{reply.nick_name}}</text>
               <text class="reply-text">{{reply.content}}</text>
             </view>
           </view>
@@ -96,8 +96,23 @@
     <input class="input" 
            placeholder="写下你的评论..." 
            value="{{commentText}}"
-           bindinput="onCommentInput"
+           bindinput="handleCommentInput"
            bindconfirm="submitComment"/>
-    <view class="submit-btn {{commentText ? 'active' : ''}}" bindtap="submitComment">发送</view>
+  </view>
+
+  <!-- 回复输入框 -->
+  <view class="reply-input" wx:if="{{showReplyInput}}">
+    <view class="reply-header">
+      <text class="reply-title">回复评论</text>
+      <view class="cancel-btn" bindtap="cancelReply">取消</view>
+    </view>
+    <view class="reply-content">
+      <input class="input" 
+             placeholder="写下你的回复..." 
+             value="{{replyText}}"
+             bindinput="handleReplyInput"
+             bindconfirm="submitReply"/>
+      <view class="submit-btn {{replyText ? 'active' : ''}}" bindtap="submitReply">发送</view>
+    </view>
   </view>
 </view>

@@ -1,5 +1,4 @@
 .container {
-  min-height: 100vh;
   background: #000;
   padding-bottom: 40rpx;
 }
@@ -54,8 +53,9 @@
 
 .meta {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
+  margin-top: 10rpx;
 }
 
 .stats {
