@@ -4,11 +4,11 @@
     <view class="verse-content">
       <text class="verse-text">{{verse.verse}}</text>
       <view class="meta-info">
-        <view class="author" bindtap="navigateToAuthor" data-author="{{verse.author}}">
-          <text class="value">{{verse.author}}</text>
-        </view>
         <view class="source" bindtap="navigateToSource" data-source="{{verse.source}}" wx:if="{{verse.source}}">
           <text class="value">《{{verse.source}}》</text>
+        </view>
+        <view class="author" bindtap="navigateToAuthor" data-author="{{verse.author}}">
+          <text class="value">{{verse.author}}</text>
         </view>
       </view>
       <view class="tags" wx:if="{{verse.tags && verse.tags.length > 0}}">
