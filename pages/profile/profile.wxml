@@ -43,7 +43,7 @@
                 <text>{{item.comments || 0}}</text>
               </view>
               <view class="stat" catchtap="handleUncollect" data-id="{{item._id}}">
-                <image class="icon" src="/assets/icons/star-filled.png"></image>
+                <image class="icon" src="/assets/icons/no-result.png"></image>
               </view>
             </view>
           </view>

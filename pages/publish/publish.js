@@ -136,6 +136,19 @@ Page({
                     success: (res) => {
                         wx.hideLoading();
                         if (res._id) {
+                            // 清空表单数据
+                            this.setData({
+                                formData: {
+                                    verse: '',
+                                    author: '',
+                                    source: '',
+                                    explanation: '',
+                                    tags: []
+                                },
+                                verseLength: 0,
+                                explanationLength: 0
+                            });
+                            
                             wx.showToast({
                                 title: '发布成功',
                                 icon: 'success',

@@ -3,7 +3,7 @@
       bindtouchmove="handleTouchMove"
       bindtouchend="handleTouchEnd">
   <view class="verse-container {{isLoading ? '' : (moveDistance > 0 ? 'slide-up' : 'slide-down')}}" wx:if="{{!isLoading}}">
-    <view class="verse-content" bindtap="navigateToDetail" data-verse="{{verses[currentIndex]}}">
+    <view class="verse-content" data-verse="{{verses[currentIndex]}}">
       <text class="verse-text">{{verses[currentIndex].verse}}</text>
       <view class="meta-info">
         <view class="meta-row">
@@ -39,10 +39,10 @@
         <image class="icon" src="/assets/icons/{{verses[currentIndex].isCollected ? 'collect-active' : 'collect'}}.png"></image>
         <text>{{verses[currentIndex].collections || 0}}</text>
       </view>
-      <view class="action-item" bindtap="handleComment" data-index="{{currentIndex}}">
+      <!-- <view class="action-item" bindtap="navigateToDetail" data-verse="{{verses[currentIndex]}}">
         <image class="icon" src="/assets/icons/comment.png"></image>
         <text>{{verses[currentIndex].comments || 0}}</text>
-      </view>
+      </view> -->
       <button class="share-btn" open-type="share" data-index="{{currentIndex}}">
         <image class="icon" src="/assets/icons/share.png"></image>
         <text class="share-count">{{verses[currentIndex].shares || 0}}</text>
@@ -51,11 +51,5 @@
   </view>
   <view class="loading" wx:else>
     <text>正在加载偈语...</text>
-  </view>
-</view>
-
-<view class="controls">
-  <view class="data-source" bindtap="toggleDataSource" wx:if="{{useAPI}}">
-    <text>API数据</text>
   </view>
 </view>

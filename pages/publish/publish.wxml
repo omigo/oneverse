@@ -5,11 +5,11 @@
       <textarea class="input textarea" 
                 name="verse"
                 placeholder="请输入偈语内容" 
-                maxlength="200"
+                maxlength="100"
                 bindinput="onVerseInput"
                 value="{{verse}}">
       </textarea>
-      <view class="word-count">{{verseLength}}/200</view>
+      <view class="word-count">{{verseLength}}/100</view>
     </view>
 
     <view class="form-group">
