@@ -1,14 +1,14 @@
 {
   "pages": [
     "pages/index/index",
+    "pages/report/report",
     "pages/search/search",
     "pages/publish/publish",
     "pages/profile/profile",
     "pages/detail/detail",
     "pages/author/author",
     "pages/source/source",
-    "pages/tag/tag",
-    "pages/report/report"
+    "pages/tag/tag"
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -31,8 +31,8 @@
       {
         "pagePath": "pages/search/search",
         "text": "搜索",
-        "iconPath": "assets/icons/search.png",
-        "selectedIconPath": "assets/icons/search-active.png"
+        "iconPath": "assets/icons/home.png",
+        "selectedIconPath": "assets/icons/home-active.png"
       },
       {
         "pagePath": "pages/publish/publish",

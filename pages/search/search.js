@@ -53,16 +53,18 @@ Page({
                 if (this.matchSearch(verse.verse, searchText)) {
                     results.verses.push(verse);
                 }
-                if (this.matchSearch(verse.source, searchText)) {
+                if (verse.source && this.matchSearch(verse.source, searchText)) {
                     results.sources.push(verse);
                 }
-                if (this.matchSearch(verse.author, searchText)) {
+                if (verse.author && this.matchSearch(verse.author, searchText)) {
                     results.authors.push(verse);
                 }
-                for (const tag of verse.tags) {
-                    if (this.matchSearch(tag, searchText)) {
-                        results.tags.push(verse);
-                        break;
+                if (verse.tags && verse.tags.length > 0) {
+                    for (const tag of verse.tags) {
+                        if (this.matchSearch(tag, searchText)) {
+                            results.tags.push(verse);
+                            break;
+                        }
                     }
                 }
             }
@@ -106,21 +108,21 @@ Page({
     navigateToAuthor(e) {
         const { author } = e.currentTarget.dataset;
         wx.navigateTo({
-            url: `/pages/detail/author/author?name=${author.name}`
+            url: `/pages/author/author?name=${author.name}`
         });
     },
 
     navigateToSource(e) {
         const { source } = e.currentTarget.dataset;
         wx.navigateTo({
-            url: `/pages/detail/source/source?name=${source.name}`
+            url: `/pages/source/source?name=${source.name}`
         });
     },
 
     navigateToTag(e) {
         const { tag } = e.currentTarget.dataset;
         wx.navigateTo({
-            url: `/pages/detail/tag/tag?name=${tag.name}`
+            url: `/pages/tag/tag?name=${tag.name}`
         });
     }
 });

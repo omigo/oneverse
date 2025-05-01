@@ -1,5 +1,3 @@
-// pages/detail/report/report.js
-const { getRandomverse } = require('../../../data/verses');
 
 Page({
 
@@ -26,15 +24,7 @@ Page({
 	 * 生命周期函数--监听页面加载
 	 */
 	onLoad(options) {
-		const { id } = options;
-
-		// TODO: 从服务器获取偈语信息
-		const verse = {
-			id,
-			...getRandomverse()
-		};
-
-		this.setData({ verse });
+		
 	},
 
 	/**
